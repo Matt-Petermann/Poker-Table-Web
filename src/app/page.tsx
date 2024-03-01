@@ -1,11 +1,16 @@
+'use client'
+
 import { Button, ButtonGroup, Card } from "@nextui-org/react";
-import { FaArrowRightLong, FaArrowRotateLeft, FaTrash } from "react-icons/fa6";
+import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "react-icons/fa6";
 
 import table from '../../public/img/table.png';
 
 export default function Home() {
   return (
     <main>
+      <Button className="fixed top-2 right-2 z-10" endContent={<FaUserShield />} onClick={() => window.location.href = '/admin'}>
+        Admin Portal
+      </Button>
       <div className="relative h-[100vh]">
         <img src={table.src} className="w-[50vw] pt-[18vh] ml-auto mr-auto" />
       </div>

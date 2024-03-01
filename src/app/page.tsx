@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar, Button, ButtonGroup, Card } from "@nextui-org/react";
+import { Button, ButtonGroup, Card } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "react-icons/fa6";
 
 import table from '../../public/img/table.png';

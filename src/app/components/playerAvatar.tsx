@@ -21,16 +21,6 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
           top: `${avatarY}vw`
         }}
       />
-      <Avatar name="BTN"
-        style={{
-          position: 'absolute',
-          width: '2.5vw',
-          height: '2.5vw',
-          backgroundColor: 'white',
-          color: 'black',
-          left: `${buttonX}vw`,
-          top: `${buttonY}vw`
-        }} />
     </>    
   )
 }

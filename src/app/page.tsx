@@ -1,14 +1,24 @@
 'use client'
 
-import { Button, ButtonGroup, Card } from "@nextui-org/react";
+import { useState } from "react";
+import { Avatar, Button, ButtonGroup, Card } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "react-icons/fa6";
 
 import PlayerAvatar from "@/app/components/playerAvatar";
-import Avatars from "@/lib/avatars";
+import avatars from "@/lib/avatars";
 
 import table from '@/public/img/table.png';
 
 export default function Home() {
+  const [buttonLocation, setButtonLocation] = useState(0);
+
+  /**
+   * Update button location.
+   */
+  const moveButton = () => {
+    setButtonLocation(buttonLocation + 1);
+  }
+  
   return (
     <main>
       <Button className="fixed top-2 right-2 z-10" endContent={<FaUserShield />} onClick={() => window.location.href = '/admin'}>
@@ -16,7 +26,18 @@ export default function Home() {
       </Button>
       <div className="relative h-[100vh] pt-[10vw]">
         <img src={table.src} className="w-[50vw] h-[25vw] ml-auto mr-auto" />
-        { Avatars.map((avatar) => <PlayerAvatar avatar={avatar} />) }
+        { avatars.map((avatar) => <PlayerAvatar avatar={avatar} />) }
+        <Avatar name="BTN"
+          style={{
+            position: 'absolute',
+            width: '2.5vw',
+            height: '2.5vw',
+            backgroundColor: 'white',
+            color: 'black',
+            left: `${avatars[buttonLocation].buttonX}vw`,
+            top: `${avatars[buttonLocation].buttonY}vw`,
+            transition: 'all .25s linear'
+          }} />
       </div>
       <Card isBlurred className="fixed border-none left-12 right-12 bottom-4">
         <div>
@@ -28,8 +49,14 @@ export default function Home() {
               Reset Hand
             </Button>
           </ButtonGroup>
-          <Button variant="ghost" color="success" size="lg" radius="full" className="float-right m-6 font-bold" endContent={<FaArrowRightLong />}>
-            Next Hand
+          <Button className="float-right m-6 font-bold"
+            variant="ghost"
+            color="success"
+            size="lg"
+            radius="full"
+            endContent={<FaArrowRightLong />}
+            onClick={() => moveButton()}>
+              Next Hand
           </Button>
         </div>
       </Card>

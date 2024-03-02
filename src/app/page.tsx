@@ -3,8 +3,9 @@
 import { Button, ButtonGroup, Card } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "react-icons/fa6";
 
-import table from '../../public/img/table.png';
 import PlayerAvatar from "./components/playerAvatar";
+
+import table from '../../public/img/table.png';
 
 export default function Home() {
   return (
@@ -12,26 +13,26 @@ export default function Home() {
       <Button className="fixed top-2 right-2 z-10" endContent={<FaUserShield />} onClick={() => window.location.href = '/admin'}>
         Admin Portal
       </Button>
-      <div className="relative h-[100vh]">
-        <img src={table.src} className="w-[50vw] pt-[18vh] ml-auto mr-auto" />
-        <PlayerAvatar avatarY={13}  avatarX={23}  buttonY={25}  buttonX={30} />
-        <PlayerAvatar avatarY={5}   avatarX={38}  buttonY={20}  buttonX={40} />
-        <PlayerAvatar avatarY={5}   avatarX={-38} buttonY={20}  buttonX={-42} />
-        <PlayerAvatar avatarY={13}  avatarX={-23} buttonY={25}  buttonX={-32} />
-        <PlayerAvatar avatarY={40}  avatarX={-17} buttonY={40}  buttonX={-30} />
-        <PlayerAvatar avatarY={-26} avatarX={-23} buttonY={-45} buttonX={-32} />
-        <PlayerAvatar avatarY={-20} avatarX={-38} buttonY={-40} buttonX={-42} />
-        <PlayerAvatar avatarY={-20} avatarX={38}  buttonY={-40} buttonX={40} />
-        <PlayerAvatar avatarY={-26} avatarX={23}  buttonY={-45} buttonX={30} />
-        <PlayerAvatar avatarY={40}  avatarX={17}  buttonY={40}  buttonX={27} />
+      <div className="relative h-[100vh] pt-[10vw]">
+        <img src={table.src} className="w-[50vw] h-[25vw] ml-auto mr-auto" />
+        <PlayerAvatar avatarY={5}     avatarX={25}    buttonY={13.25} buttonX={30.75}  />
+        <PlayerAvatar avatarY={2.5}   avatarX={40}    buttonY={11.25} buttonX={41.25}  />
+        <PlayerAvatar avatarY={2.5}   avatarX={55}    buttonY={11.25} buttonX={56.25} />
+        <PlayerAvatar avatarY={5}     avatarX={70}    buttonY={13.25} buttonX={66.75} />
+        <PlayerAvatar avatarY={20}    avatarX={77.5}  buttonY={21.25} buttonX={71.25} />
+        <PlayerAvatar avatarY={35}    avatarX={70}    buttonY={29.25} buttonX={66.75} />
+        <PlayerAvatar avatarY={37.5}  avatarX={55}    buttonY={31.25} buttonX={56.25} />
+        <PlayerAvatar avatarY={37.5}  avatarX={40}    buttonY={31.25} buttonX={41.25}  />
+        <PlayerAvatar avatarY={35}    avatarX={25}    buttonY={29.25} buttonX={30.75}  />
+        <PlayerAvatar avatarY={20}    avatarX={17.5}  buttonY={21.25} buttonX={26.25}  />
       </div>
       <Card isBlurred className="fixed border-none left-12 right-12 bottom-4">
         <div>
-          <ButtonGroup size="lg" radius="full" className="m-6 font-bold">
-            <Button variant="ghost" color="warning" startContent={<FaArrowRotateLeft />}>
+          <ButtonGroup size="lg" radius="full" className="m-6">
+            <Button variant="ghost" color="warning" className="font-bold" startContent={<FaArrowRotateLeft />}>
               Undo Last Card
             </Button>
-            <Button variant="ghost" color="danger" endContent={<FaTrash />}>
+            <Button variant="ghost" color="danger" className="font-bold" endContent={<FaTrash />}>
               Reset Hand
             </Button>
           </ButtonGroup>

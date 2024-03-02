@@ -1,17 +1,15 @@
 import { Avatar } from "@nextui-org/react";
 
+import { CustomAvatar } from "@/lib/avatars";
+
 interface PlayerAvatar {
-  /** Percent distance of the viewport width for the avatar from the top. */
-  avatarY: number;
-  /** Percent distance of the viewport width for the avatar from the left. */
-  avatarX: number,
-  /** Percent distance of the viewport width for the button from the top. */
-  buttonY: number;
-  /** Percent distance of the viewport width for the button from the left. */
-  buttonX: number
+  /** Custom avatar properties for table arrangement. */
+  avatar: CustomAvatar
 }
 
-export default function PlayerAvatar({avatarY, avatarX, buttonY, buttonX}: PlayerAvatar) {
+export default function PlayerAvatar({ avatar }: PlayerAvatar) {
+  const { avatarX, avatarY, buttonX, buttonY } = avatar;
+
   return (
     <>
       <Avatar
@@ -19,8 +17,8 @@ export default function PlayerAvatar({avatarY, avatarX, buttonY, buttonX}: Playe
           position: 'absolute',
           width: '5vw',
           height: '5vw',
-          top: `${avatarY}vw`,
-          left: `${avatarX}vw`
+          left: `${avatarX}vw`,
+          top: `${avatarY}vw`
         }}
       />
       <Avatar name="BTN"
@@ -30,8 +28,8 @@ export default function PlayerAvatar({avatarY, avatarX, buttonY, buttonX}: Playe
           height: '2.5vw',
           backgroundColor: 'white',
           color: 'black',
-          top: `${buttonY}vw`,
-          left: `${buttonX}vw`
+          left: `${buttonX}vw`,
+          top: `${buttonY}vw`
         }} />
     </>    
   )

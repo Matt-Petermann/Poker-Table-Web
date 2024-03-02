@@ -3,9 +3,10 @@
 import { Button, ButtonGroup, Card } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "react-icons/fa6";
 
-import PlayerAvatar from "./components/playerAvatar";
+import PlayerAvatar from "@/app/components/playerAvatar";
+import Avatars from "@/lib/avatars";
 
-import table from '../../public/img/table.png';
+import table from '@/public/img/table.png';
 
 export default function Home() {
   return (
@@ -15,16 +16,7 @@ export default function Home() {
       </Button>
       <div className="relative h-[100vh] pt-[10vw]">
         <img src={table.src} className="w-[50vw] h-[25vw] ml-auto mr-auto" />
-        <PlayerAvatar avatarY={5}     avatarX={25}    buttonY={13.25} buttonX={30.75}  />
-        <PlayerAvatar avatarY={2.5}   avatarX={40}    buttonY={11.25} buttonX={41.25}  />
-        <PlayerAvatar avatarY={2.5}   avatarX={55}    buttonY={11.25} buttonX={56.25} />
-        <PlayerAvatar avatarY={5}     avatarX={70}    buttonY={13.25} buttonX={66.75} />
-        <PlayerAvatar avatarY={20}    avatarX={77.5}  buttonY={21.25} buttonX={71.25} />
-        <PlayerAvatar avatarY={35}    avatarX={70}    buttonY={29.25} buttonX={66.75} />
-        <PlayerAvatar avatarY={37.5}  avatarX={55}    buttonY={31.25} buttonX={56.25} />
-        <PlayerAvatar avatarY={37.5}  avatarX={40}    buttonY={31.25} buttonX={41.25}  />
-        <PlayerAvatar avatarY={35}    avatarX={25}    buttonY={29.25} buttonX={30.75}  />
-        <PlayerAvatar avatarY={20}    avatarX={17.5}  buttonY={21.25} buttonX={26.25}  />
+        { Avatars.map((avatar) => <PlayerAvatar avatar={avatar} />) }
       </div>
       <Card isBlurred className="fixed border-none left-12 right-12 bottom-4">
         <div>

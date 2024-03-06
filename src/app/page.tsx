@@ -36,7 +36,7 @@ export default function Home() {
             color: 'black',
             left: `${avatars[buttonLocation].buttonX}vw`,
             top: `${avatars[buttonLocation].buttonY}vw`,
-            transition: 'all .25s linear'
+            transition: 'all .25s ease-out'
           }} />
       </div>
       <Card isBlurred className="fixed border-none left-12 right-12 bottom-4">

@@ -8,7 +8,7 @@ interface PlayerAvatar {
 }
 
 export default function PlayerAvatar({ avatar }: PlayerAvatar) {
-  const { avatarX, avatarY, buttonX, buttonY } = avatar;
+  const { avatarX, avatarY } = avatar;
 
   return (
     <>

@@ -39,7 +39,7 @@ export default function Home() {
             transition: 'all .25s ease-out'
           }} />
       </div>
-      <Card isBlurred className="fixed border-none left-12 right-12 bottom-4">
+      <Card isBlurred className="fixed left-12 right-12 bottom-4">
         <div>
           <ButtonGroup size="lg" radius="full" className="m-6">
             <Button variant="ghost" color="warning" className="font-bold" startContent={<FaArrowRotateLeft />}>

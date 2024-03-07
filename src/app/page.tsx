@@ -1,22 +1,22 @@
 'use client'
 
-import { useState } from "react";
 import { Avatar, Button, ButtonGroup, Card } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "react-icons/fa6";
 
 import PlayerAvatar from "@/app/components/playerAvatar";
 import avatars from "@/lib/avatars";
+import { useTableContext } from "./contexts/tableContext";
 
 import table from '@/public/img/table.png';
 
 export default function Home() {
-  const [buttonLocation, setButtonLocation] = useState(0);
+  const { buttonPosition, setButtonPosition } = useTableContext();
 
   /**
    * Update button location.
    */
   const moveButton = () => {
-    setButtonLocation(buttonLocation + 1);
+    setButtonPosition(buttonPosition + 1);
   }
   
   return (
@@ -34,8 +34,8 @@ export default function Home() {
             height: '2.5vw',
             backgroundColor: 'white',
             color: 'black',
-            left: `${avatars[buttonLocation].buttonX}vw`,
-            top: `${avatars[buttonLocation].buttonY}vw`,
+            left: `${avatars[buttonPosition].buttonX}vw`,
+            top: `${avatars[buttonPosition].buttonY}vw`,
             transition: 'all .25s ease-out'
           }} />
       </div>

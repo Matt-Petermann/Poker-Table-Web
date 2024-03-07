@@ -1,6 +1,7 @@
 'use client'
 
 import { NextUIProvider } from '@nextui-org/react';
+import { TableContextProvider } from './contexts/tableContext';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -9,7 +10,9 @@ interface ProvidersProps {
 export function Providers({children}: ProvidersProps) {
   return (
     <NextUIProvider>
-      {children}
+      <TableContextProvider value={children}>
+        {children}
+      </TableContextProvider>
     </NextUIProvider>
   )
 }

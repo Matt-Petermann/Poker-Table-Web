@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Avatar, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem } from "@nextui-org/react";
+import { FaCircleRight, FaRegClock } from "react-icons/fa6";
 
 import { CustomAvatar } from "@/lib/avatars";
-import { FaCircleRight, FaRegClock } from "react-icons/fa6";
+import { useTableContext } from "../contexts/tableContext";
 
 interface PlayerAvatar {
   /** Custom avatar properties for table arrangement. */
@@ -10,14 +11,17 @@ interface PlayerAvatar {
 }
 
 export default function PlayerAvatar({ avatar }: PlayerAvatar) {
-  const { avatarX, avatarY } = avatar;
+  const { avatarX, avatarY, seatNumber } = avatar;
   
   const [isOpen, setIsOpen] = useState(false);
+
+  const { setButtonPosition } = useTableContext();
 
   /**
    * Move button to this seat.
    */
   const moveButton = () => {
+    setButtonPosition(seatNumber);
     setIsOpen(false);
   }
 

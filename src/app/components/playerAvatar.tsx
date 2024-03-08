@@ -3,7 +3,7 @@ import { Avatar, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem }
 import { FaCircleRight, FaRegClock } from "react-icons/fa6";
 
 import { CustomAvatar } from "@/lib/avatars";
-import { useTableContext } from "../contexts/tableContext";
+import { useTableContext } from "@/app/contexts/tableContext";
 
 interface PlayerAvatar {
   /** Custom avatar properties for table arrangement. */
@@ -15,7 +15,7 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
   
   const [isOpen, setIsOpen] = useState(false);
 
-  const { setButtonPosition } = useTableContext();
+  const { setButtonPosition, activePlayers } = useTableContext();
 
   /**
    * Move button to this seat.
@@ -29,6 +29,7 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
    * Flag this player as sitting out.
    */
   const sitPlayerOut = () => {
+    activePlayers.splice(activePlayers.indexOf(seatNumber), 1);
     setIsOpen(false);
   }
 
@@ -37,7 +38,7 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
       <Popover showArrow size="lg" isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
         <PopoverTrigger>
           <Avatar
-            className="hover:cursor-pointer absolute w-[5vw] h-[5vw]"
+            className={`hover:cursor-pointer absolute w-[5vw] h-[5vw] ${activePlayers.includes(seatNumber) ? 'opacity-100' : 'opacity-15'}`}
             style={{
               left: `${avatarX}vw`,
               top: `${avatarY}vw`

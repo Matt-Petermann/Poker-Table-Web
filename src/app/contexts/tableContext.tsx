@@ -4,12 +4,15 @@ interface ITableContext {
   /** Seat number where the button is located. */
   buttonPosition: number,
   /** Set the seat number of where the button is located. */
-  setButtonPosition: (seat: number) => void
+  setButtonPosition: (seat: number) => void,
+  /** Players still active in the game. */
+  activePlayers: number[]
 }
 
 const initialTableContext: ITableContext = {
   buttonPosition: 0,
-  setButtonPosition: () => {}
+  setButtonPosition: () => {},
+  activePlayers: Array.from(Array(10).keys())
 }
 
 const TableServiceContext = createContext<ITableContext>(initialTableContext);
@@ -21,6 +24,8 @@ export const TableContextProvider = ({ children }: any) => {
 
   /** 
    * Set the seat number of where the button is located.
+   * 
+   * @param seat Seat number to place the button at.
    */
   const setButtonPosition = (seat: number) => {
     setValues(prevValues => ({ ...prevValues, buttonPosition: seat }));

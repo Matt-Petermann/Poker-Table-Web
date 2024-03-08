@@ -5,7 +5,7 @@ import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "reac
 
 import PlayerAvatar from "@/app/components/playerAvatar";
 import avatars from "@/lib/avatars";
-import { useTableContext } from "./contexts/tableContext";
+import { useTableContext } from "@/app/contexts/tableContext";
 
 import table from '@/public/img/table.png';
 

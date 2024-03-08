@@ -10,13 +10,24 @@ import { useTableContext } from "@/app/contexts/tableContext";
 import table from '@/public/img/table.png';
 
 export default function Home() {
-  const { buttonPosition, setButtonPosition } = useTableContext();
+  const { buttonPosition, setButtonPosition, activePlayers } = useTableContext();
 
   /**
-   * Update button location.
+   * Update button location to next available seat.
    */
   const moveButton = () => {
-    setButtonPosition(buttonPosition + 1);
+    // Start the button one seat to the left
+    let targetPosition = buttonPosition + 1 === 10 ? 0 : buttonPosition + 1;
+
+    // Rotate around the table until an active seat is found
+    while(!activePlayers.includes(targetPosition))
+      if(targetPosition === 9)
+        targetPosition = 0;
+      else
+        targetPosition++;
+
+    // Update the button position to the first active seat
+    setButtonPosition(targetPosition);
   }
   
   return (

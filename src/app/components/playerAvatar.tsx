@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Avatar, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem } from "@nextui-org/react";
-import { FaCircleRight, FaRegClock } from "react-icons/fa6";
+import { FaCircleRight, FaRegClock, FaClock } from "react-icons/fa6";
 
 import { CustomAvatar } from "@/lib/avatars";
 import { useTableContext } from "@/app/contexts/tableContext";
@@ -33,6 +33,14 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
     setIsOpen(false);
   }
 
+  /**
+   * Set this player to active in the game.
+   */
+  const returnPlayer = () => {
+    activePlayers.push(seatNumber);
+    setIsOpen(false);
+  }
+
   return (
     <>
       <Popover showArrow size="lg" isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
@@ -57,9 +65,16 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
             <ListboxItem
               key="dropout"
               startContent={<FaRegClock />}
-              className="text-xl"
+              className={`text-xl ${activePlayers.includes(seatNumber) ? "" : "hidden"}`}
               onClick={sitPlayerOut}>
                 <p className="text-xl">Sit player out</p>
+            </ListboxItem>
+            <ListboxItem
+              key="return"
+              startContent={<FaClock />}
+              className={`text-xl ${activePlayers.includes(seatNumber) ? "hidden" : ""}`}
+              onClick={returnPlayer}>
+                <p className="text-xl">Return player</p>
             </ListboxItem>
           </Listbox>
         </PopoverContent>

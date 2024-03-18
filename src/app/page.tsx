@@ -1,7 +1,7 @@
 'use client'
 
-import { Avatar, Button, ButtonGroup, Card } from "@nextui-org/react";
-import { FaArrowRightLong, FaArrowRotateLeft, FaTrash, FaUserShield } from "react-icons/fa6";
+import { Avatar, Button, ButtonGroup, Card, Skeleton } from "@nextui-org/react";
+import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaUserShield } from "react-icons/fa6";
 
 import PlayerAvatar from "@/app/components/playerAvatar";
 import avatars from "@/lib/avatars";
@@ -49,6 +49,61 @@ export default function Home() {
             top: `${avatars[buttonPosition].buttonY}vw`,
             transition: 'all .25s ease-out'
           }} />
+        <Skeleton
+          isLoaded={false}
+          className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+          style={{
+            left: '32.5vw',
+            top: '19vw'
+          }}>
+          <div className="w-[5vw] h-[7vw] p-4 bg-neutral-600">
+            <FaCheck className="w-full h-full text-green-500" />
+          </div>
+        </Skeleton>
+        <Skeleton
+          isLoaded={false}
+          className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+          style={{
+            left: '40vw',
+            top: '19vw'
+          }}>
+          <div className="w-[5vw] h-[7vw] p-4 bg-neutral-600">
+            <FaCheck className="w-full h-full text-green-500" />
+          </div>
+        </Skeleton>
+        <Skeleton
+          isLoaded={false}
+          className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+          style={{
+            left: '47.5vw',
+            top: '19vw'
+          }}>
+          <div className="w-[5vw] h-[7vw] p-4 bg-neutral-600">
+            <FaCheck className="w-full h-full text-green-500" />
+          </div>
+        </Skeleton>
+        <Skeleton
+          isLoaded={false}
+          className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+          style={{
+            left: '55vw',
+            top: '19vw'
+          }}>
+          <div className="w-[5vw] h-[7vw] p-4 bg-neutral-600">
+            <FaCheck className="w-full h-full text-green-500" />
+          </div>
+        </Skeleton>
+        <Skeleton
+          isLoaded={false}
+          className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+          style={{
+            left: '62.5vw',
+            top: '19vw'
+          }}>
+          <div className="w-[5vw] h-[7vw] p-4 bg-neutral-600">
+            <FaCheck className="w-full h-full text-green-500" />
+          </div>
+        </Skeleton>
       </div>
       <Card isBlurred className="fixed left-12 right-12 bottom-4">
         <div>

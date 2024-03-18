@@ -8,7 +8,9 @@ export interface CustomAvatar {
   /** Percent distance of the viewport width for the button from the left. */
   buttonX: number,
   /** Percent distance of the viewport width for the button from the top. */
-  buttonY: number
+  buttonY: number,
+  /** Name of the player represented by this avatar. */
+  playerName?: string
 }
 
 const Avatars: CustomAvatar[] = [

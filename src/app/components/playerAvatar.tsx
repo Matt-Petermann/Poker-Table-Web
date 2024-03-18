@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Avatar, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem, Skeleton } from "@nextui-org/react";
-import { FaCircleRight, FaRegClock, FaClock, FaCheck } from "react-icons/fa6";
+import { FaCircleRight, FaRegClock, FaClock, FaCheck, FaPencil } from "react-icons/fa6";
 
 import { CustomAvatar } from "@/lib/avatars";
 import { useTableContext } from "@/app/contexts/tableContext";
+import EditPlayerModal, { EditPlayerModalRef } from "./editPlayerModal";
 
 interface PlayerAvatar {
   /** Custom avatar properties for table arrangement. */
@@ -11,9 +12,11 @@ interface PlayerAvatar {
 }
 
 export default function PlayerAvatar({ avatar }: PlayerAvatar) {
-  const { avatarX, avatarY, seatNumber } = avatar;
+  const { avatarX, avatarY, seatNumber, playerName } = avatar;
   
   const [isOpen, setIsOpen] = useState(false);
+
+  const editPlayerModalRef = useRef<EditPlayerModalRef>(null);
 
   const { setButtonPosition, activePlayers } = useTableContext();
 
@@ -43,10 +46,12 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
 
   return (
     <>
+      <EditPlayerModal ref={editPlayerModalRef} avatar={avatar} />
       <Popover showArrow size="lg" isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
         <PopoverTrigger>
           <Avatar
-            className={`hover:cursor-pointer absolute w-[5vw] h-[5vw] ${activePlayers.includes(seatNumber) ? 'opacity-100' : 'opacity-15'}`}
+            name={ playerName }
+            className={`hover:cursor-pointer absolute w-[5vw] h-[5vw] text-3xl ${activePlayers.includes(seatNumber) ? 'opacity-100' : 'opacity-15'}`}
             style={{
               left: `${avatarX}vw`,
               top: `${avatarY}vw`
@@ -54,7 +59,17 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
           />
         </PopoverTrigger>
         <PopoverContent>
-          <Listbox>              
+          <Listbox>
+            <ListboxItem
+              key="edit"
+              startContent={<FaPencil />}
+              className="text-xl"
+              onClick={() => {
+                  setIsOpen(false);
+                  editPlayerModalRef.current?.openModal();
+                }}>
+                <p className="text-xl">Edit player name</p>
+            </ListboxItem>
             <ListboxItem
               key="move"
               startContent={<FaCircleRight />}
@@ -85,7 +100,7 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
           className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
           style={{
             left: `${avatarX - .25}vw`,
-            top: `${avatarY + 3}vw`
+            top: `${avatarY + 3.5}vw`
           }}>
           <div className="w-[2.5vw] h-[3.5vw] p-2 bg-neutral-600">
             <FaCheck className="w-full h-full text-green-500" />
@@ -96,7 +111,7 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
           className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
           style={{
             left: `${avatarX + 2.75}vw`,
-            top: `${avatarY + 3}vw`
+            top: `${avatarY + 3.5}vw`
           }}>
           <div className="w-[2.5vw] h-[3.5vw] p-2 bg-neutral-600">
             <FaCheck className="w-full h-full text-green-500" />

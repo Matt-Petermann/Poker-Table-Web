@@ -79,28 +79,30 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
           </Listbox>
         </PopoverContent>
       </Popover>
-      <Skeleton
-        isLoaded={false}
-        className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
-        style={{
-          left: `${avatarX - .25}vw`,
-          top: `${avatarY + 3}vw`
-        }}>
-        <div className="w-[2.5vw] h-[3.5vw] p-2 bg-neutral-600">
-          <FaCheck className="w-full h-full text-green-500" />
-        </div>
-      </Skeleton>
-      <Skeleton
-        isLoaded={false}
-        className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
-        style={{
-          left: `${avatarX + 2.75}vw`,
-          top: `${avatarY + 3}vw`
-        }}>
-        <div className="w-[2.5vw] h-[3.5vw] p-2 bg-neutral-600">
-          <FaCheck className="w-full h-full text-green-500" />
-        </div>
-      </Skeleton>
+      <div className={activePlayers.includes(seatNumber) ? '' : 'hidden'}>
+        <Skeleton
+          isLoaded={false}
+          className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
+          style={{
+            left: `${avatarX - .25}vw`,
+            top: `${avatarY + 3}vw`
+          }}>
+          <div className="w-[2.5vw] h-[3.5vw] p-2 bg-neutral-600">
+            <FaCheck className="w-full h-full text-green-500" />
+          </div>
+        </Skeleton>
+        <Skeleton
+          isLoaded={false}
+          className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
+          style={{
+            left: `${avatarX + 2.75}vw`,
+            top: `${avatarY + 3}vw`
+          }}>
+          <div className="w-[2.5vw] h-[3.5vw] p-2 bg-neutral-600">
+            <FaCheck className="w-full h-full text-green-500" />
+          </div>
+        </Skeleton>
+      </div>
     </>    
   )
 }

@@ -32,12 +32,17 @@ export default function Home() {
   
   return (
     <main>
-      <Button className="fixed top-2 right-2 z-10" endContent={<FaUserShield />} onClick={() => window.location.href = '/admin'}>
+      <Button as="a" className="fixed top-2 right-2 z-10" endContent={<FaUserShield />} href="/admin">
         Admin Portal
       </Button>
       <div className="relative h-[100vh] pt-[10vw]">
+        { /** Table */ }
         <img src={table.src} className="w-[50vw] h-[25vw] ml-auto mr-auto" />
+
+        { /** Avatars */}
         { avatars.map((avatar) => <PlayerAvatar avatar={avatar} />) }
+
+        { /** Dealer Button */}
         <Avatar name="BTN"
           style={{
             position: 'absolute',
@@ -49,6 +54,8 @@ export default function Home() {
             top: `${avatars[buttonPosition].buttonY}vw`,
             transition: 'all .25s ease-out'
           }} />
+
+        { /** Flop */}
         <Skeleton
           isLoaded={false}
           className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
@@ -82,6 +89,8 @@ export default function Home() {
             <FaCheck className="w-full h-full text-green-500" />
           </div>
         </Skeleton>
+
+        { /** Turn */ }
         <Skeleton
           isLoaded={false}
           className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
@@ -93,6 +102,8 @@ export default function Home() {
             <FaCheck className="w-full h-full text-green-500" />
           </div>
         </Skeleton>
+
+        { /** River */}
         <Skeleton
           isLoaded={false}
           className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
@@ -105,6 +116,8 @@ export default function Home() {
           </div>
         </Skeleton>
       </div>
+
+      { /** Bottom Controls */}
       <Card isBlurred className="fixed left-12 right-12 bottom-4">
         <div>
           <ButtonGroup size="lg" radius="full" className="m-6">

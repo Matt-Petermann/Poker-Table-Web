@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem } from "@nextui-org/react";
+import { Avatar, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem, Skeleton } from "@nextui-org/react";
 import { FaCircleRight, FaRegClock, FaClock } from "react-icons/fa6";
 
 import { CustomAvatar } from "@/lib/avatars";
@@ -79,6 +79,22 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
           </Listbox>
         </PopoverContent>
       </Popover>
+      <Skeleton
+        className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
+        style={{
+          left: `${avatarX - .25}vw`,
+          top: `${avatarY + 3}vw`
+        }}>
+        <div className="w-[2.5vw] h-[3.5vw] bg-blue-500" />
+      </Skeleton>
+      <Skeleton
+        className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
+        style={{
+          left: `${avatarX + 2.75}vw`,
+          top: `${avatarY + 3}vw`
+        }}>
+        <div className="bg-blue-800" />
+      </Skeleton>
     </>    
   )
 }

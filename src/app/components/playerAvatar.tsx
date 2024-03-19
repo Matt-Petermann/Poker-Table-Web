@@ -29,6 +29,14 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
   }
 
   /**
+   * Open the modal to edit player info.
+   */
+  const openEditPlayerModal = () => {
+    editPlayerModalRef.current?.openModal();
+    setIsOpen(false);
+  }
+
+  /**
    * Flag this player as sitting out.
    */
   const sitPlayerOut = () => {
@@ -64,10 +72,7 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
               key="edit"
               startContent={<FaPencil />}
               className="text-xl"
-              onClick={() => {
-                  setIsOpen(false);
-                  editPlayerModalRef.current?.openModal();
-                }}>
+              onClick={openEditPlayerModal}>
                 <p className="text-xl">Edit player name</p>
             </ListboxItem>
             <ListboxItem

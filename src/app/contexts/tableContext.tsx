@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useReducer, useState } from "react";
 
 interface ITableContext {
   /** Seat number where the button is located. */
@@ -6,13 +6,16 @@ interface ITableContext {
   /** Set the seat number of where the button is located. */
   setButtonPosition: (seat: number) => void,
   /** Players still active in the game. */
-  activePlayers: number[]
+  activePlayers: number[],
+  /** Refresh the table UI. */
+  refresh: () => void
 }
 
 const initialTableContext: ITableContext = {
   buttonPosition: 0,
   setButtonPosition: () => {},
-  activePlayers: Array.from(Array(10).keys())
+  activePlayers: Array.from(Array(10).keys()),
+  refresh: () => {}
 }
 
 const TableServiceContext = createContext<ITableContext>(initialTableContext);
@@ -21,6 +24,7 @@ export const useTableContext = () => useContext(TableServiceContext);
 
 export const TableContextProvider = ({ children }: any) => {
   const [values, setValues] = useState<ITableContext>(initialTableContext);
+  const [, refresh] = useReducer(x => x+1, 0);
 
   /** 
    * Set the seat number of where the button is located.
@@ -32,7 +36,7 @@ export const TableContextProvider = ({ children }: any) => {
   }
 
   return (
-    <TableServiceContext.Provider value={{ ...values, setButtonPosition }}>
+    <TableServiceContext.Provider value={{ ...values, setButtonPosition, refresh }}>
       { children }
     </TableServiceContext.Provider>
   )

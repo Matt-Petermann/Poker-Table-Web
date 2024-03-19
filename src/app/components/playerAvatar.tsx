@@ -58,7 +58,7 @@ export default function PlayerAvatar({ avatar }: PlayerAvatar) {
       <Popover showArrow size="lg" isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
         <PopoverTrigger>
           <Avatar
-            name={ playerName }
+            name={ playerName ? playerName.match(/\b(\w)/g)?.join('').toUpperCase() : undefined }
             className={`hover:cursor-pointer absolute w-[5vw] h-[5vw] text-3xl ${activePlayers.includes(seatNumber) ? 'opacity-100' : 'opacity-15'}`}
             style={{
               left: `${avatarX}vw`,

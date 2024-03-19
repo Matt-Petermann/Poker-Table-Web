@@ -41,7 +41,7 @@ const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModal>(({ avata
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         <ModalBody>
-          <Input ref={inputRef} autoFocus isClearable variant="underlined" color="primary" label="Name" defaultValue={avatar.playerName} />
+          <Input ref={inputRef} autoFocus variant="underlined" color="primary" label="Name" defaultValue={avatar.playerName} />
         </ModalBody>
         <ModalFooter>
           <Button className="rounded-full" variant="ghost" color="danger" startContent={<FaX />} onClick={onClose}>Cancel</Button>

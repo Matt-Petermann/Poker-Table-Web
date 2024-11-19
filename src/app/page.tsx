@@ -70,7 +70,7 @@ export default () => {
                 {/** Flop */}
                 <Skeleton
                     isLoaded={false}
-                    className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+                    className="absolute z-10 rounded-md"
                     style={{
                         left: "32.5vw",
                         top: "19vw"
@@ -82,7 +82,7 @@ export default () => {
                 </Skeleton>
                 <Skeleton
                     isLoaded={false}
-                    className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+                    className="absolute z-10 rounded-md"
                     style={{
                         left: "40vw",
                         top: "19vw"
@@ -94,7 +94,7 @@ export default () => {
                 </Skeleton>
                 <Skeleton
                     isLoaded={false}
-                    className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+                    className="absolute z-10 rounded-md"
                     style={{
                         left: "47.5vw",
                         top: "19vw"
@@ -108,7 +108,7 @@ export default () => {
                 {/** Turn */}
                 <Skeleton
                     isLoaded={false}
-                    className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+                    className="absolute z-10 rounded-md"
                     style={{
                         left: "55vw",
                         top: "19vw"
@@ -122,7 +122,7 @@ export default () => {
                 {/** River */}
                 <Skeleton
                     isLoaded={false}
-                    className="absolute w-[5vw] h-[7vw] z-10 rounded-md"
+                    className="absolute z-10 rounded-md"
                     style={{
                         left: "62.5vw",
                         top: "19vw"

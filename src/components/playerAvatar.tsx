@@ -136,7 +136,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
             <div className={player.isActive ? "" : "hidden"}>
                 <Skeleton
                     isLoaded={false}
-                    className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
+                    className="absolute z-10 rounded-md"
                     style={{
                         left: `${avatarX - 0.25}vw`,
                         top: `${avatarY + 3.5}vw`
@@ -148,7 +148,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                 </Skeleton>
                 <Skeleton
                     isLoaded={false}
-                    className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
+                    className="absolute z-10 rounded-md"
                     style={{
                         left: `${avatarX + 2.75}vw`,
                         top: `${avatarY + 3.5}vw`

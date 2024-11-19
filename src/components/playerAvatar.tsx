@@ -84,7 +84,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                         }}
                     />
                 </PopoverTrigger>
-                <PopoverContent>
+                <PopoverContent className="bg-opacity-50 backdrop-blur-md">
                     <Listbox aria-label="List">
                         <ListboxItem
                             key="edit"

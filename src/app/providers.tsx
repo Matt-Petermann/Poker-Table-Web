@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { NextUIProvider } from '@nextui-org/react';
-import { TableContextProvider } from './contexts/tableContext';
+import { NextUIProvider } from "@nextui-org/react";
+import { TableContextProvider } from "../contexts/tableContext";
 
 interface ProvidersProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
-export function Providers({children}: ProvidersProps) {
-  return (
-    <NextUIProvider>
-      <TableContextProvider value={children}>
-        {children}
-      </TableContextProvider>
-    </NextUIProvider>
-  )
+export function Providers({ children }: ProvidersProps) {
+    return (
+        <NextUIProvider>
+            <TableContextProvider value={children}>
+                {children}
+            </TableContextProvider>
+        </NextUIProvider>
+    );
 }

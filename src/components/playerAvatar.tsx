@@ -3,7 +3,7 @@ import { Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, 
 import { FaCheck, FaCircleRight, FaClock, FaPencil, FaRegClock } from "react-icons/fa6";
 
 import { CustomAvatar } from "@/lib/avatars";
-import { useTableContext } from "@/app/contexts/tableContext";
+import { useTableContext } from "@/contexts/tableContext";
 import EditPlayerModal, { EditPlayerModalRef } from "./editPlayerModal";
 
 interface PlayerAvatar {

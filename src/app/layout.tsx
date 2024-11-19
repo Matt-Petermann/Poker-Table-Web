@@ -14,12 +14,10 @@ export const metadata: Metadata = {
     title: "Poker Table Web"
 };
 
-export default function RootLayout({ children }: Readonly<RootProps>) {
-    return (
-        <html lang="en">
-            <body className={`${inter.className} dark`}>
-                <Providers>{children}</Providers>
-            </body>
-        </html>
-    );
-}
+export default ({ children }: Readonly<RootProps>) => (
+    <html lang="en">
+        <body className={`${inter.className} dark`}>
+            <Providers>{children}</Providers>
+        </body>
+    </html>
+);

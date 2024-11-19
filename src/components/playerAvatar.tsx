@@ -4,20 +4,17 @@ import { FaCheck, FaCircleRight, FaClock, FaPencil, FaRegClock } from "react-ico
 
 import { CustomAvatar } from "@/lib/avatars";
 import { useTableContext } from "@/contexts/tableContext";
-import EditPlayerModal, { EditPlayerModalRef } from "./editPlayerModal";
+import { EditPlayerModal, EditPlayerModalRef } from "./editPlayerModal";
 
 interface PlayerAvatar {
     /** Custom avatar properties for table arrangement. */
     avatar: CustomAvatar;
 }
 
-export default function PlayerAvatar({ avatar }: PlayerAvatar) {
+export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
     const { avatarX, avatarY, seatNumber, playerName } = avatar;
-
     const [isOpen, setIsOpen] = useState(false);
-
     const editPlayerModalRef = useRef<EditPlayerModalRef>(null);
-
     const { setButtonPosition, activePlayers } = useTableContext();
 
     /**

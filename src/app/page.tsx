@@ -3,15 +3,14 @@
 import { Avatar, Button, ButtonGroup, Card, Skeleton } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaUserShield } from "react-icons/fa6";
 
-import PlayerAvatar from "@/components/playerAvatar";
+import { PlayerAvatar } from "@/components/playerAvatar";
 import avatars from "@/lib/avatars";
 import { useTableContext } from "@/contexts/tableContext";
 
 import table from "@/public/img/table.png";
 
-export default function Home() {
-    const { buttonPosition, setButtonPosition, activePlayers } =
-        useTableContext();
+export default () => {
+    const { buttonPosition, setButtonPosition, activePlayers } = useTableContext();
 
     /**
      * Update button location to next available seat.

@@ -7,12 +7,10 @@ interface ProvidersProps {
     children: React.ReactNode;
 }
 
-export function Providers({ children }: ProvidersProps) {
-    return (
-        <NextUIProvider>
-            <TableContextProvider value={children}>
-                {children}
-            </TableContextProvider>
-        </NextUIProvider>
-    );
-}
+export const Providers = ({ children }: ProvidersProps) => (
+    <NextUIProvider>
+        <TableContextProvider value={children}>
+            {children}
+        </TableContextProvider>
+    </NextUIProvider>
+);

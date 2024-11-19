@@ -1,3 +1,3 @@
-export default function Admin() {
+export default () => {
     return <main></main>;
 }

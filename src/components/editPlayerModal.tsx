@@ -1,11 +1,11 @@
-import { forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle } from "react";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { FaFloppyDisk, FaX } from "react-icons/fa6";
 
 import type { Player } from "@/types/player";
 import { useTableContext } from "@/contexts/tableContext";
 
-export interface EditPlayerModal {
+export interface EditPlayerModalRef {
     /** Open the edit player modal. */
     openModal: () => void;
 }
@@ -15,14 +15,14 @@ interface EditPlayerModalProps {
     player: Player;
 }
 
-export const EditPlayerModal = forwardRef<EditPlayerModal, EditPlayerModalProps>(({ player }, ref) => {
+const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModalProps>(({ player }, ref) => {
     const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
     const { handleUpdatePlayers } = useTableContext();
 
     /**
      * Update player name
      */
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = useCallback((e: React.FormEvent) => {
         e.preventDefault();
 
         // Update the player name
@@ -33,7 +33,7 @@ export const EditPlayerModal = forwardRef<EditPlayerModal, EditPlayerModalProps>
 
         // Close the modal
         onClose();
-    };
+    }, []);
 
     useImperativeHandle(ref, () => ({
         openModal: onOpen
@@ -43,7 +43,9 @@ export const EditPlayerModal = forwardRef<EditPlayerModal, EditPlayerModalProps>
         <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
+            size="xl"
             disableAnimation
+            hideCloseButton
         >
             <ModalContent className="bg-opacity-50 backdrop-blur-md">
                 <form onSubmit={handleSave}>
@@ -53,6 +55,7 @@ export const EditPlayerModal = forwardRef<EditPlayerModal, EditPlayerModalProps>
                             variant="underlined"
                             color="primary"
                             label="Name"
+                            size="lg"
                             defaultValue={player.name ?? ""}
                             aria-label="Name"
                         />
@@ -82,3 +85,5 @@ export const EditPlayerModal = forwardRef<EditPlayerModal, EditPlayerModalProps>
         </Modal>
     );
 });
+
+export default React.memo(EditPlayerModal);

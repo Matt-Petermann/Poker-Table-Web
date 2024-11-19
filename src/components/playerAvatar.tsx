@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, Skeleton } from "@nextui-org/react";
 import { FaCheck, FaCircleRight, FaClock, FaPencil, FaRegClock } from "react-icons/fa6";
 
 import type { Player } from "@/types/player";
 import type { CustomAvatar } from "@/types/customAvatar";
 import { useTableContext } from "@/contexts/tableContext";
-import { EditPlayerModal } from "./editPlayerModal";
+import EditPlayerModal, { EditPlayerModalRef } from "./editPlayerModal";
 
 interface PlayerAvatarProps {
     /** Data for the player at this seat. */
@@ -18,45 +18,45 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
     const { avatarX, avatarY, seatNumber } = avatar;
     const { players, handleChangeButtonPosition, handleUpdatePlayers } = useTableContext();
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const editPlayerModalRef = useRef<EditPlayerModal>(null);
+    const editPlayerModalRef = useRef<EditPlayerModalRef>(null);
 
     /**
      * Move button to this seat.
      */
-    const moveButton = () => {
+    const handleMoveButton = useCallback(() => {
         handleChangeButtonPosition(seatNumber);
         setIsPopoverOpen(false);
-    };
+    }, []);
 
     /**
      * Open the modal to edit player info.
      */
-    const openEditPlayerModal = () => {
+    const handleOpenEditPlayerModal = useCallback(() => {
         editPlayerModalRef.current?.openModal();
         setIsPopoverOpen(false);
-    };
+    }, []);
 
     /**
      * Flag this player as sitting out.
      */
-    const sitPlayerOut = () => {
+    const handleSitPlayerOut = useCallback(() => {
         handleUpdatePlayers(seatNumber, {
             ...players.find(p => p.id === player.id)!,
             isActive: false
         })
         setIsPopoverOpen(false);
-    };
+    }, [players]);
 
     /**
      * Set this player to active in the game.
      */
-    const returnPlayer = () => {
+    const handleReturnPlayer = useCallback(() => {
         handleUpdatePlayers(seatNumber, {
             ...players.find(p => p.id === player.id)!,
             isActive: true
         })
         setIsPopoverOpen(false);
-    };
+    }, [players]);
 
     return (
         <>
@@ -90,7 +90,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                             key="edit"
                             startContent={<FaPencil />}
                             className="text-xl"
-                            onClick={openEditPlayerModal}
+                            onClick={handleOpenEditPlayerModal}
                             aria-label="Edit"
                         >
                             <p className="text-xl">Edit player name</p>
@@ -99,7 +99,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                             key="move"
                             startContent={<FaCircleRight />}
                             className="text-xl"
-                            onClick={moveButton}
+                            onClick={handleMoveButton}
                             aria-label="Move"
                         >
                             <p className="text-xl">Move button here</p>
@@ -112,7 +112,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                                     ? ""
                                     : "hidden"
                             }`}
-                            onClick={sitPlayerOut}
+                            onClick={handleSitPlayerOut}
                             aria-label="Sit Out"
                         >
                             <p className="text-xl">Sit player out</p>
@@ -125,7 +125,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                                     ? "hidden"
                                     : ""
                             }`}
-                            onClick={returnPlayer}
+                            onClick={handleReturnPlayer}
                             aria-label="Return"
                         >
                             <p className="text-xl">Return player</p>

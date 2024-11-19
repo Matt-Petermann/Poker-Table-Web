@@ -1,27 +1,30 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, Skeleton } from "@nextui-org/react";
 import { FaCheck, FaCircleRight, FaClock, FaPencil, FaRegClock } from "react-icons/fa6";
 
-import { CustomAvatar } from "@/lib/avatars";
+import type { Player } from "@/types/player";
+import type { CustomAvatar } from "@/types/customAvatar";
 import { useTableContext } from "@/contexts/tableContext";
-import { EditPlayerModal, EditPlayerModalRef } from "./editPlayerModal";
+import { EditPlayerModal } from "./editPlayerModal";
 
-interface PlayerAvatar {
+interface PlayerAvatarProps {
+    /** Data for the player at this seat. */
+    player: Player;
     /** Custom avatar properties for table arrangement. */
     avatar: CustomAvatar;
 }
 
-export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
-    const { avatarX, avatarY, seatNumber, playerName } = avatar;
+export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) => {
+    const { avatarX, avatarY, seatNumber } = avatar;
+    const { players, handleChangeButtonPosition, handleUpdatePlayers } = useTableContext();
     const [isOpen, setIsOpen] = useState(false);
-    const editPlayerModalRef = useRef<EditPlayerModalRef>(null);
-    const { setButtonPosition, activePlayers } = useTableContext();
+    const editPlayerModalRef = useRef<EditPlayerModal>(null);
 
     /**
      * Move button to this seat.
      */
     const moveButton = () => {
-        setButtonPosition(seatNumber);
+        handleChangeButtonPosition(seatNumber);
         setIsOpen(false);
     };
 
@@ -37,7 +40,10 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
      * Flag this player as sitting out.
      */
     const sitPlayerOut = () => {
-        activePlayers.splice(activePlayers.indexOf(seatNumber), 1);
+        handleUpdatePlayers(seatNumber, {
+            ...players.find(p => p.id === player.id)!,
+            isActive: false
+        })
         setIsOpen(false);
     };
 
@@ -45,7 +51,10 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
      * Set this player to active in the game.
      */
     const returnPlayer = () => {
-        activePlayers.push(seatNumber);
+        handleUpdatePlayers(seatNumber, {
+            ...players.find(p => p.id === player.id)!,
+            isActive: true
+        })
         setIsOpen(false);
     };
 
@@ -53,7 +62,7 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
         <>
             <EditPlayerModal
                 ref={editPlayerModalRef}
-                avatar={avatar}
+                player={player}
             />
             <Popover
                 showArrow
@@ -63,16 +72,9 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
             >
                 <PopoverTrigger>
                     <Avatar
-                        name={
-                            playerName
-                                ? playerName
-                                      .match(/\b(\w)/g)
-                                      ?.join("")
-                                      .toUpperCase()
-                                : undefined
-                        }
+                        name={player.name?.match(/\b(\w)/g)?.join("").toUpperCase() ?? undefined}
                         className={`hover:cursor-pointer absolute w-[5vw] h-[5vw] text-3xl ${
-                            activePlayers.includes(seatNumber)
+                            player.isActive
                                 ? "opacity-100"
                                 : "opacity-15"
                         }`}
@@ -104,7 +106,7 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
                             key="dropout"
                             startContent={<FaRegClock />}
                             className={`text-xl ${
-                                activePlayers.includes(seatNumber)
+                                player.isActive
                                     ? ""
                                     : "hidden"
                             }`}
@@ -116,7 +118,7 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
                             key="return"
                             startContent={<FaClock />}
                             className={`text-xl ${
-                                activePlayers.includes(seatNumber)
+                                player.isActive
                                     ? "hidden"
                                     : ""
                             }`}
@@ -127,7 +129,7 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
                     </Listbox>
                 </PopoverContent>
             </Popover>
-            <div className={activePlayers.includes(seatNumber) ? "" : "hidden"}>
+            <div className={player.isActive ? "" : "hidden"}>
                 <Skeleton
                     isLoaded={false}
                     className="absolute w-[2.5vw] h-[3.5vw] z-10 rounded-md"
@@ -155,4 +157,4 @@ export const PlayerAvatar = ({ avatar }: PlayerAvatar) => {
             </div>
         </>
     );
-}
+});

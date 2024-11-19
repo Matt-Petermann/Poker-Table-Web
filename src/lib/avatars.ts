@@ -1,19 +1,6 @@
-export interface CustomAvatar {
-    /** Position at the table in [0,9] */
-    seatNumber: number,
-    /** Percent distance of the viewport width for the avatar from the left. */
-    avatarX: number,
-    /** Percent distance of the viewport width for the avatar from the top. */
-    avatarY: number,
-    /** Percent distance of the viewport width for the button from the left. */
-    buttonX: number,
-    /** Percent distance of the viewport width for the button from the top. */
-    buttonY: number,
-    /** Name of the player represented by this avatar. */
-    playerName?: string
-}
+import type { CustomAvatar } from "@/types/customAvatar";
 
-const Avatars: CustomAvatar[] = [
+export const Avatars: CustomAvatar[] = [
     {
         seatNumber: 0,
         avatarX: 25,
@@ -85,5 +72,3 @@ const Avatars: CustomAvatar[] = [
         buttonY: 21.25
     }
 ];
-
-export default Avatars;

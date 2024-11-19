@@ -9,7 +9,7 @@ interface ProvidersProps {
 
 export const Providers = ({ children }: ProvidersProps) => (
     <NextUIProvider>
-        <TableContextProvider value={children}>
+        <TableContextProvider>
             {children}
         </TableContextProvider>
     </NextUIProvider>

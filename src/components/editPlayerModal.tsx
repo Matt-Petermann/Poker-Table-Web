@@ -2,23 +2,22 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { FaFloppyDisk, FaX } from "react-icons/fa6";
 
-import { CustomAvatar } from "@/lib/avatars";
-import { useTableContext } from "../contexts/tableContext";
+import type { Player } from "@/types/player";
+import { useTableContext } from "@/contexts/tableContext";
 
-export interface EditPlayerModalRef {
+export interface EditPlayerModal {
     /** Open the edit player modal. */
     openModal: () => void;
 }
 
-interface EditPlayerModal {
-    /** Avatar to edit with this modal. */
-    avatar: CustomAvatar;
+interface EditPlayerModalProps {
+    /** Player to edit with this modal. */
+    player: Player;
 }
 
-export const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModal>(({ avatar }, ref) => {
+export const EditPlayerModal = forwardRef<EditPlayerModal, EditPlayerModalProps>(({ player }, ref) => {
     const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-    const { refresh } = useTableContext();
-
+    const { handleUpdatePlayers } = useTableContext();
     const inputRef = useRef<HTMLInputElement>(null);
 
     /**
@@ -26,8 +25,10 @@ export const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModal>((
      */
     const save = () => {
         // Update the player name
-        avatar.playerName = inputRef.current?.value;
-        refresh();
+        handleUpdatePlayers(player.id, {
+            ...player,
+            name: inputRef.current?.value ?? null
+        })
 
         // Close the modal
         onClose();
@@ -50,7 +51,7 @@ export const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModal>((
                         variant="underlined"
                         color="primary"
                         label="Name"
-                        defaultValue={avatar.playerName}
+                        defaultValue={player.name ?? ""}
                     />
                 </ModalBody>
                 <ModalFooter>

@@ -1,32 +1,34 @@
 "use client";
 
+import { useCallback } from "react";
 import { Avatar, Button, ButtonGroup, Card, Skeleton } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaUserShield } from "react-icons/fa6";
 
-import { PlayerAvatar } from "@/components/playerAvatar";
-import avatars from "@/lib/avatars";
+import { Avatars } from "@/lib/avatars";
 import { useTableContext } from "@/contexts/tableContext";
-
+import { PlayerAvatar } from "@/components/playerAvatar";
 import table from "@/public/img/table.png";
 
 export default () => {
-    const { buttonPosition, setButtonPosition, activePlayers } = useTableContext();
+    const { buttonPosition, handleChangeButtonPosition, players } = useTableContext();
 
     /**
      * Update button location to next available seat.
      */
-    const moveButton = () => {
-        // Start the button one seat to the left
+    const handleMoveButton = useCallback(() => {
+        // Start the button one seat clockwise
         let targetPosition = buttonPosition + 1 === 10 ? 0 : buttonPosition + 1;
 
         // Rotate around the table until an active seat is found
-        while (!activePlayers.includes(targetPosition))
-            if (targetPosition === 9) targetPosition = 0;
-            else targetPosition++;
-
+        while (!players.some(player => player.isActive && player.id === targetPosition))
+            if (targetPosition === 9)
+                targetPosition = 0;
+            else
+                targetPosition++;
+            
         // Update the button position to the first active seat
-        setButtonPosition(targetPosition);
-    };
+        handleChangeButtonPosition(targetPosition);
+    }, [buttonPosition, players]);
 
     return (
         <main>
@@ -45,9 +47,9 @@ export default () => {
                     className="w-[50vw] h-[25vw] ml-auto mr-auto"
                 />
 
-                {/** Avatars */}
-                {avatars.map(avatar => (
-                    <PlayerAvatar avatar={avatar} />
+                {/** Player Avatars */}
+                {Avatars.map((avatar, idx) => (
+                    <PlayerAvatar player={players[idx]} avatar={avatar} key={idx} />
                 ))}
 
                 {/** Dealer Button */}
@@ -59,8 +61,8 @@ export default () => {
                         height: "2.5vw",
                         backgroundColor: "white",
                         color: "black",
-                        left: `${avatars[buttonPosition].buttonX}vw`,
-                        top: `${avatars[buttonPosition].buttonY}vw`,
+                        left: `${Avatars[buttonPosition].buttonX}vw`,
+                        top: `${Avatars[buttonPosition].buttonY}vw`,
                         transition: "all .25s ease-out"
                     }}
                 />
@@ -167,7 +169,7 @@ export default () => {
                         size="lg"
                         radius="full"
                         endContent={<FaArrowRightLong />}
-                        onClick={() => moveButton()}
+                        onClick={() => handleMoveButton()}
                     >
                         Next Hand
                     </Button>

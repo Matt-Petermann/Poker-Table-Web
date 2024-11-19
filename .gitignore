@@ -7,3 +7,6 @@ package-lock.json
 
 # Next JS
 .next/
+
+# IDE
+.vscode/

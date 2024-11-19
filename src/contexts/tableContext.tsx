@@ -1,45 +1,57 @@
-import { createContext, useContext, useReducer, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
+import type { Player } from "@/types/player";
 
 interface ITableContext {
     /** Seat number where the button is located. */
     buttonPosition: number;
     /** Set the seat number of where the button is located. */
-    setButtonPosition: (seat: number) => void;
-    /** Players still active in the game. */
-    activePlayers: number[];
-    /** Refresh the table UI. */
-    refresh: () => void;
+    handleChangeButtonPosition: (position: number) => void;
+    /** All players at the table. */
+    players: Player[];
+    /** Update the active players array. */
+    handleUpdatePlayers: (id: number, newPlayer: Player) => void;
 }
 
-const initialTableContext: ITableContext = {
+const initialContext: ITableContext = {
     buttonPosition: 0,
-    setButtonPosition: () => {},
-    activePlayers: Array.from(Array(10).keys()),
-    refresh: () => {}
+    handleChangeButtonPosition: () => {},
+    players: (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true })),
+    handleUpdatePlayers: () => {}
 };
 
-const TableServiceContext = createContext<ITableContext>(initialTableContext);
+const TableContext = createContext<ITableContext>(initialContext);
+export const useTableContext = () => useContext(TableContext);
 
-export const useTableContext = () => useContext(TableServiceContext);
-
-export const TableContextProvider = ({ children }: any) => {
-    const [values, setValues] = useState<ITableContext>(initialTableContext);
-    const [, refresh] = useReducer(x => x + 1, 0);
+export const TableContextProvider = ({ children }: { children: React.ReactNode }) => {
+    const [values, setValues] = useState<ITableContext>(initialContext);
 
     /**
-     * Set the seat number of where the button is located.
-     *
-     * @param seat Seat number to place the button at.
+     * Update the location of the button.
+     * @param newPosition New seat number to place the button at.
      */
-    const setButtonPosition = (seat: number) => {
-        setValues(prevValues => ({ ...prevValues, buttonPosition: seat }));
-    };
+    const handleChangeButtonPosition = useCallback((newPosition: number) => {
+        setValues(prevValues => ({ ...prevValues, buttonPosition: newPosition }))
+    }, []);
+
+    /**
+     * Update the active players array.
+     * @param id Target ID of the player to update.
+     * @param newPlayer Updated player object to replace.
+     */
+    const handleUpdatePlayers = useCallback((id: number, newPlayer: Player) => {
+        setValues(prevValues => ({
+            ...prevValues,
+            players: prevValues.players.map(player => {
+                if(player.id === id)
+                    return newPlayer;
+                return player;
+            })
+        }));
+    }, []);
 
     return (
-        <TableServiceContext.Provider
-            value={{ ...values, setButtonPosition, refresh }}
-        >
+        <TableContext.Provider value={{ ...values, handleChangeButtonPosition, handleUpdatePlayers }}>
             {children}
-        </TableServiceContext.Provider>
+        </TableContext.Provider>
     );
 };

@@ -17,7 +17,7 @@ interface PlayerAvatarProps {
 export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) => {
     const { avatarX, avatarY, seatNumber } = avatar;
     const { players, handleChangeButtonPosition, handleUpdatePlayers } = useTableContext();
-    const [isOpen, setIsOpen] = useState(false);
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
     const editPlayerModalRef = useRef<EditPlayerModal>(null);
 
     /**
@@ -25,7 +25,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
      */
     const moveButton = () => {
         handleChangeButtonPosition(seatNumber);
-        setIsOpen(false);
+        setIsPopoverOpen(false);
     };
 
     /**
@@ -33,7 +33,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
      */
     const openEditPlayerModal = () => {
         editPlayerModalRef.current?.openModal();
-        setIsOpen(false);
+        setIsPopoverOpen(false);
     };
 
     /**
@@ -44,7 +44,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
             ...players.find(p => p.id === player.id)!,
             isActive: false
         })
-        setIsOpen(false);
+        setIsPopoverOpen(false);
     };
 
     /**
@@ -55,7 +55,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
             ...players.find(p => p.id === player.id)!,
             isActive: true
         })
-        setIsOpen(false);
+        setIsPopoverOpen(false);
     };
 
     return (
@@ -67,8 +67,8 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
             <Popover
                 showArrow
                 size="lg"
-                isOpen={isOpen}
-                onOpenChange={open => setIsOpen(open)}
+                isOpen={isPopoverOpen}
+                onOpenChange={open => setIsPopoverOpen(open)}
             >
                 <PopoverTrigger>
                     <Avatar
@@ -85,12 +85,13 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                     />
                 </PopoverTrigger>
                 <PopoverContent>
-                    <Listbox>
+                    <Listbox aria-label="List">
                         <ListboxItem
                             key="edit"
                             startContent={<FaPencil />}
                             className="text-xl"
                             onClick={openEditPlayerModal}
+                            aria-label="Edit"
                         >
                             <p className="text-xl">Edit player name</p>
                         </ListboxItem>
@@ -99,6 +100,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                             startContent={<FaCircleRight />}
                             className="text-xl"
                             onClick={moveButton}
+                            aria-label="Move"
                         >
                             <p className="text-xl">Move button here</p>
                         </ListboxItem>
@@ -111,6 +113,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                                     : "hidden"
                             }`}
                             onClick={sitPlayerOut}
+                            aria-label="Sit Out"
                         >
                             <p className="text-xl">Sit player out</p>
                         </ListboxItem>
@@ -123,6 +126,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                                     : ""
                             }`}
                             onClick={returnPlayer}
+                            aria-label="Return"
                         >
                             <p className="text-xl">Return player</p>
                         </ListboxItem>

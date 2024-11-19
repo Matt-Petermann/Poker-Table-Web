@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Avatar, Button, ButtonGroup, Card, Skeleton } from "@nextui-org/react";
+import { Avatar, Button, ButtonGroup, Card, Modal, ModalBody, ModalContent, ModalFooter, Skeleton, useDisclosure } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaUserShield } from "react-icons/fa6";
 
 import { Avatars } from "@/lib/avatars";
@@ -10,7 +10,8 @@ import { PlayerAvatar } from "@/components/playerAvatar";
 import table from "@/public/img/table.png";
 
 export default () => {
-    const { buttonPosition, handleChangeButtonPosition, players } = useTableContext();
+    const { buttonPosition, handleChangeButtonPosition, players, handleUpdatePlayers } = useTableContext();
+    const { isOpen, onOpenChange, onClose } = useDisclosure();
 
     /**
      * Update button location to next available seat.
@@ -29,6 +30,27 @@ export default () => {
         // Update the button position to the first active seat
         handleChangeButtonPosition(targetPosition);
     }, [buttonPosition, players]);
+
+    /**
+     * Reset all the players and cards at the table and return the button to the starting position.
+     */
+    const handleResetTable = useCallback(() => {
+        // Return the button to the starting position
+        handleChangeButtonPosition(0);
+
+        // Reset every player in the game
+        (Array.from(Array(10).keys())).forEach(id => {
+            handleUpdatePlayers(id, {
+                id,
+                name: null,
+                isActive: true
+            })
+        });
+
+        // TODO: Reset the cards on the board
+
+        onClose();
+    }, []);
 
     return (
         <main>
@@ -140,6 +162,17 @@ export default () => {
                 className="fixed left-12 right-12 bottom-4"
             >
                 <div>
+                    <Button
+                        size="lg"
+                        variant="ghost"
+                        radius="full"
+                        color="danger"
+                        className="font-bold ml-6"
+                        startContent={<FaTrash />}
+                        onClick={onOpenChange}
+                    >
+                        Reset Table
+                    </Button>
                     <ButtonGroup
                         size="lg"
                         radius="full"
@@ -175,6 +208,36 @@ export default () => {
                     </Button>
                 </div>
             </Card>
+
+            {/** Confirm Reset Modal */}
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
+                <ModalContent className="bg-opacity-50 backdrop-blur-md">
+                    <ModalBody className="text-center">
+                        <h1 className="font-semibold">Are you sure you want to reset the table?</h1>
+                        <h2>This action cannot be undone.</h2>
+                    </ModalBody>
+                    <ModalFooter className="flex justify-center">
+                        <Button
+                            variant="ghost"
+                            color="success"
+                            size="lg"
+                            radius="full"
+                            onClick={onOpenChange}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            color="danger"
+                            size="lg"
+                            radius="full"
+                            onClick={handleResetTable}
+                        >
+                            Reset
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </main>
     );
 }

@@ -3,11 +3,11 @@ import type { Player } from "@/types/player";
 
 interface ITableContext {
     /** Seat number where the button is located. */
-    buttonPosition: number;
+    buttonPosition: Readonly<number>;
     /** Set the seat number of where the button is located. */
     handleChangeButtonPosition: (position: number) => void;
     /** All players at the table. */
-    players: Player[];
+    players: Readonly<Player[]>;
     /** Update the active players array. */
     handleUpdatePlayers: (id: number, newPlayer: Player) => void;
 }

@@ -1,36 +1,52 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import type { Player } from "@/types/player";
 
-interface ITableContext {
+const defaultButtonPosition = 0;
+const defaultPlayers = (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true }));
+
+type TableValues = {
     /** Seat number where the button is located. */
     buttonPosition: Readonly<number>;
-    /** Set the seat number of where the button is located. */
-    handleChangeButtonPosition: (position: number) => void;
     /** All players at the table. */
     players: Readonly<Player[]>;
-    /** Update the active players array. */
-    handleUpdatePlayers: (id: number, newPlayer: Player) => void;
 }
 
-const initialContext: ITableContext = {
-    buttonPosition: 0,
+type TableContext = {
+    /** Set the seat number of where the button is located. */
+    handleChangeButtonPosition: (position: number) => void;
+    /** Update the active players array. */
+    handleUpdatePlayers: (id: number, newPlayer: Player) => void;
+    /** Reset all players on the table and return the button to the starting location. */
+    handleResetTable: () => void;
+} & TableValues;
+
+const initialValues: TableValues = {
+    buttonPosition: defaultButtonPosition,
+    players: structuredClone(defaultPlayers)
+}
+
+const initialContext: TableContext = {
+    ...initialValues,
     handleChangeButtonPosition: () => {},
-    players: (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true })),
-    handleUpdatePlayers: () => {}
+    handleUpdatePlayers: () => {},
+    handleResetTable: () => {}
 };
 
-const TableContext = createContext<ITableContext>(initialContext);
+const TableContext = createContext<TableContext>(initialContext);
 export const useTableContext = () => useContext(TableContext);
 
 export const TableContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const [values, setValues] = useState<ITableContext>(initialContext);
+    const [values, setValues] = useState<TableValues>(initialValues);
 
     /**
      * Update the location of the button.
      * @param newPosition New seat number to place the button at.
      */
     const handleChangeButtonPosition = useCallback((newPosition: number) => {
-        setValues(prevValues => ({ ...prevValues, buttonPosition: newPosition }))
+        if(newPosition >= 0 && newPosition < 10)
+            setValues(prevValues => ({ ...prevValues, buttonPosition: newPosition }));
+        else
+            throw new Error("Button must be in [0,9]");
     }, []);
 
     /**
@@ -49,8 +65,18 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         }));
     }, []);
 
+    /**
+     * Clear the player data and return the button to starting position.
+     */
+    const handleResetTable = useCallback(() => {
+        setValues({
+            buttonPosition: defaultButtonPosition,
+            players: structuredClone(defaultPlayers)
+        })
+    }, []);
+
     return (
-        <TableContext.Provider value={{ ...values, handleChangeButtonPosition, handleUpdatePlayers }}>
+        <TableContext.Provider value={{ ...values, handleChangeButtonPosition, handleUpdatePlayers, handleResetTable }}>
             {children}
         </TableContext.Provider>
     );

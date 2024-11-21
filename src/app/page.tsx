@@ -10,7 +10,7 @@ import { PlayerAvatar } from "@/components/playerAvatar";
 import table from "@/public/img/table.png";
 
 export default () => {
-    const { buttonPosition, handleChangeButtonPosition, players, handleUpdatePlayers } = useTableContext();
+    const { buttonPosition, handleChangeButtonPosition, players, handleUpdatePlayers, handleResetTable } = useTableContext();
     const { isOpen, onOpenChange, onClose } = useDisclosure();
 
     /**
@@ -34,21 +34,8 @@ export default () => {
     /**
      * Reset all the players and cards at the table and return the button to the starting position.
      */
-    const handleResetTable = useCallback(() => {
-        // Return the button to the starting position
-        handleChangeButtonPosition(0);
-
-        // Reset every player in the game
-        (Array.from(Array(10).keys())).forEach(id => {
-            handleUpdatePlayers(id, {
-                id,
-                name: null,
-                isActive: true
-            })
-        });
-
-        // TODO: Reset the cards on the board
-
+    const handleConfirmResetTable = useCallback(() => {
+        handleResetTable();
         onClose();
     }, []);
 
@@ -231,7 +218,7 @@ export default () => {
                             color="danger"
                             size="lg"
                             radius="full"
-                            onClick={handleResetTable}
+                            onClick={handleConfirmResetTable}
                         >
                             Reset
                         </Button>

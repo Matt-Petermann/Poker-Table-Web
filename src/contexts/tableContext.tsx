@@ -4,6 +4,9 @@ import type { Player } from "@/types/player";
 const defaultButtonPosition = 0;
 const defaultPlayers = (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true }));
 
+const storedPlayers = localStorage.getItem("players");
+const storedButtonPosition = Number(localStorage.getItem("button-position"));
+
 type TableValues = {
     /** Seat number where the button is located. */
     buttonPosition: Readonly<number>;
@@ -21,8 +24,8 @@ type TableContext = {
 } & TableValues;
 
 const initialValues: TableValues = {
-    buttonPosition: defaultButtonPosition,
-    players: structuredClone(defaultPlayers)
+    buttonPosition: storedButtonPosition ?? defaultButtonPosition,
+    players: storedPlayers as Player[] | null ?? structuredClone(defaultPlayers)
 }
 
 const initialContext: TableContext = {

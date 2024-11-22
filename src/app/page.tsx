@@ -10,7 +10,7 @@ import { PlayerAvatar } from "@/components/playerAvatar";
 import table from "@/public/img/table.png";
 
 export default () => {
-    const { buttonPosition, handleChangeButtonPosition, players, handleUpdatePlayers, handleResetTable } = useTableContext();
+    const { buttonPosition, handleChangeButtonPosition, players, handleResetTable } = useTableContext();
     const { isOpen, onOpenChange, onClose } = useDisclosure();
 
     /**

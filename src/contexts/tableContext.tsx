@@ -1,11 +1,11 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Player } from "@/types/player";
+
+const LS_KEY_PLAYERS = "players";
+const LS_KEY_BUTTON_POSITION = "button-position";
 
 const defaultButtonPosition = 0;
 const defaultPlayers = (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true }));
-
-const storedPlayers = localStorage.getItem("players");
-const storedButtonPosition = Number(localStorage.getItem("button-position"));
 
 type TableValues = {
     /** Seat number where the button is located. */
@@ -24,8 +24,8 @@ type TableContext = {
 } & TableValues;
 
 const initialValues: TableValues = {
-    buttonPosition: storedButtonPosition ?? defaultButtonPosition,
-    players: storedPlayers as Player[] | null ?? structuredClone(defaultPlayers)
+    buttonPosition: defaultButtonPosition,
+    players: structuredClone(defaultPlayers)
 }
 
 const initialContext: TableContext = {
@@ -46,8 +46,10 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * @param newPosition New seat number to place the button at.
      */
     const handleChangeButtonPosition = useCallback((newPosition: number) => {
-        if(newPosition >= 0 && newPosition < 10)
+        if(newPosition >= 0 && newPosition < 10) {
             setValues(prevValues => ({ ...prevValues, buttonPosition: newPosition }));
+            localStorage.setItem(LS_KEY_BUTTON_POSITION, String(newPosition));
+        }
         else
             throw new Error("Button must be in [0,9]");
     }, []);
@@ -58,14 +60,19 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * @param newPlayer Updated player object to replace.
      */
     const handleUpdatePlayers = useCallback((id: number, newPlayer: Player) => {
-        setValues(prevValues => ({
-            ...prevValues,
-            players: prevValues.players.map(player => {
+        setValues(prevValues => {
+            const newPlayers = prevValues.players.map(player => {
                 if(player.id === id)
                     return newPlayer;
                 return player;
-            })
-        }));
+            });
+            localStorage.setItem(LS_KEY_PLAYERS, JSON.stringify(newPlayers));
+
+            return {
+                ...prevValues,
+                players: newPlayers
+            }
+        });
     }, []);
 
     /**
@@ -75,7 +82,27 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         setValues({
             buttonPosition: defaultButtonPosition,
             players: structuredClone(defaultPlayers)
-        })
+        });
+        localStorage.setItem(LS_KEY_BUTTON_POSITION, String(defaultButtonPosition));
+        localStorage.setItem(LS_KEY_PLAYERS, JSON.stringify(defaultPlayers));
+    }, []);
+
+    /** When the component mounts, check local storage for values. */
+    useEffect(() => {
+        const storedButtonPosition = localStorage.getItem(LS_KEY_BUTTON_POSITION);
+        const storedPlayers = localStorage.getItem(LS_KEY_PLAYERS);
+
+        // If there is stored user data, load it into state
+        if(storedButtonPosition && storedPlayers)
+            setValues({
+                buttonPosition: Number(storedButtonPosition),
+                players: JSON.parse(storedPlayers)
+            });
+        // Otherwise, create defaults to local storage
+        else {
+            localStorage.setItem(LS_KEY_BUTTON_POSITION, String(defaultButtonPosition));
+            localStorage.setItem(LS_KEY_PLAYERS, JSON.stringify(defaultPlayers));
+        }
     }, []);
 
     return (

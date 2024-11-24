@@ -105,6 +105,24 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         }
     }, []);
 
+    /** When the component mounts, open the event source for reading cards. */
+    useEffect(() => {
+        const eventSource = new EventSource("http://192.168.1.53:8000/dealer");
+        eventSource.onmessage = e => {
+            console.log(e.data)
+        };
+        eventSource.onerror = () => {
+            console.log("connection closed")
+        }
+        eventSource.onopen = () => {
+            console.log("connection opened")
+        }
+
+        return () => {
+            eventSource.close();
+        };
+    }, []);
+
     return (
         <TableContext.Provider value={{ ...values, handleChangeButtonPosition, handleUpdatePlayers, handleResetTable }}>
             {children}

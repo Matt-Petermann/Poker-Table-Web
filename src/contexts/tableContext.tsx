@@ -7,6 +7,8 @@ const LS_KEY_BUTTON_POSITION = "button-position";
 const defaultButtonPosition = 0;
 const defaultPlayers = (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true }));
 
+type ConnectionStatus = "error" | "success";
+
 type TableValues = {
     /** Seat number where the button is located. */
     buttonPosition: Readonly<number>;
@@ -15,6 +17,8 @@ type TableValues = {
 }
 
 type TableContext = {
+    /** Current status of the connection to the microservice. */
+    connectionStatus: Readonly<ConnectionStatus>;
     /** Set the seat number of where the button is located. */
     handleChangeButtonPosition: (position: number) => void;
     /** Update the active players array. */
@@ -30,6 +34,7 @@ const initialValues: TableValues = {
 
 const initialContext: TableContext = {
     ...initialValues,
+    connectionStatus: "success",
     handleChangeButtonPosition: () => {},
     handleUpdatePlayers: () => {},
     handleResetTable: () => {}
@@ -40,6 +45,7 @@ export const useTableContext = () => useContext(TableContext);
 
 export const TableContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [values, setValues] = useState<TableValues>(initialValues);
+    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("success");
 
     /**
      * Update the location of the button.
@@ -112,19 +118,25 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
             console.log(e.data)
         };
         eventSource.onerror = () => {
-            console.log("connection closed")
+            setConnectionStatus("error");
         }
         eventSource.onopen = () => {
-            console.log("connection opened")
+            setConnectionStatus("success");
         }
 
-        return () => {
-            eventSource.close();
-        };
+        return () => eventSource.close();
     }, []);
 
     return (
-        <TableContext.Provider value={{ ...values, handleChangeButtonPosition, handleUpdatePlayers, handleResetTable }}>
+        <TableContext.Provider
+            value={{
+                ...values,
+                connectionStatus,
+                handleChangeButtonPosition,
+                handleUpdatePlayers,
+                handleResetTable
+            }}
+        >
             {children}
         </TableContext.Provider>
     );

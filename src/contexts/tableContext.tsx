@@ -107,7 +107,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
 
     /** When the component mounts, open the event source for reading cards. */
     useEffect(() => {
-        const eventSource = new EventSource("http://192.168.1.53:8000/dealer");
+        const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_URL}/dealer`);
         eventSource.onmessage = e => {
             console.log(e.data)
         };

@@ -117,12 +117,8 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         eventSource.onmessage = e => {
             console.log(e.data)
         };
-        eventSource.onerror = () => {
-            setConnectionStatus("error");
-        }
-        eventSource.onopen = () => {
-            setConnectionStatus("success");
-        }
+        eventSource.onerror = () => setConnectionStatus("error");
+        eventSource.onopen = () => setConnectionStatus("success");
 
         return () => eventSource.close();
     }, []);

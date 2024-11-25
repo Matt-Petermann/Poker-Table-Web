@@ -10,3 +10,6 @@ package-lock.json
 
 # IDE
 .vscode/
+
+# Environment
+**/.DS_Store

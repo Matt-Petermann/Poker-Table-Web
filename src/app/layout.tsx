@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
+"use client";
+
 import { Inter } from "next/font/google";
-import { Providers } from "./providers";
 import { DisplayIndicator } from "@/components/displayIndicator";
 
 import "./globals.css";
+import { TableContextProvider } from "@/contexts/tableContext";
+import { NextUIProvider } from "@nextui-org/react";
 
 interface RootProps {
     children: React.ReactNode;
@@ -11,19 +13,17 @@ interface RootProps {
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-    title: "Poker Table Web"
-};
-
 export default ({ children }: Readonly<RootProps>) => (
     <html lang="en">
         <body className={`${inter.className} relative dark`}>
-            <Providers>
-                <span className="absolute top-2 left-2">
-                    <DisplayIndicator />
-                </span>                
-                {children}
-            </Providers>
+            <NextUIProvider>
+                <TableContextProvider>
+                    <span className="absolute top-2 left-2">
+                        <DisplayIndicator />
+                    </span>                
+                    {children}
+                </TableContextProvider>
+            </NextUIProvider>
         </body>
     </html>
 );

@@ -7,13 +7,9 @@ import "./globals.css";
 import { TableContextProvider } from "@/contexts/tableContext";
 import { NextUIProvider } from "@nextui-org/react";
 
-interface RootProps {
-    children: React.ReactNode;
-}
-
 const inter = Inter({ subsets: ["latin"] });
 
-export default ({ children }: Readonly<RootProps>) => (
+export default ({ children }: Readonly<{ children: React.ReactNode }>) => (
     <html lang="en">
         <body className={`${inter.className} relative dark`}>
             <NextUIProvider>

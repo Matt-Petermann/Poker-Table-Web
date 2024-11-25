@@ -7,7 +7,7 @@ const LS_KEY_BUTTON_POSITION = "button-position";
 const defaultButtonPosition = 0;
 const defaultPlayers = (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true }));
 
-type ConnectionStatus = "error" | "success";
+type ConnectionStatus = "loading" | "error" | "success";
 
 type TableValues = {
     /** Seat number where the button is located. */
@@ -37,7 +37,7 @@ const initialValues: TableValues = {
 const initialContext: TableContext = {
     ...initialValues,
     isLoading: true,
-    connectionStatus: "success",
+    connectionStatus: "loading",
     handleChangeButtonPosition: () => {},
     handleUpdatePlayers: () => {},
     handleResetTable: () => {}
@@ -49,7 +49,7 @@ export const useTableContext = () => useContext(TableContext);
 export const TableContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [values, setValues] = useState<TableValues>(initialValues);
     const [isLoading, setIsLoading] = useState(true);
-    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("success");
+    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("loading");
 
     /**
      * Update the location of the button.
@@ -126,6 +126,15 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         };
         eventSource.onerror = () => setConnectionStatus("error");
         eventSource.onopen = () => setConnectionStatus("success");
+
+        // If there is no error after 10 seconds, set the status to "success"
+        setTimeout(() => {
+            setConnectionStatus(currentStatus => {
+                if(currentStatus === "loading")
+                    return "success";
+                return currentStatus;
+            });
+        }, 10000);
 
         return () => eventSource.close();
     }, []);

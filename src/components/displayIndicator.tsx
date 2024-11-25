@@ -12,6 +12,8 @@ export const DisplayIndicator = React.memo<DisplayIndicator>(({ className }) => 
     const { connectionStatus } = useTableContext();
 
     switch(connectionStatus) {
+        case "loading":
+            return <p className={className}>...</p>
         case "error":
             return <FaLinkSlash className={`${className} text-red-500 text-2xl`} />
         case "success":

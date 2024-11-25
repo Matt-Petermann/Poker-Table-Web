@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Avatar, Button, ButtonGroup, Card, Modal, ModalBody, ModalContent, ModalFooter, Skeleton, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, ButtonGroup, Card, Modal, ModalBody, ModalContent, ModalFooter, Skeleton, Spinner, useDisclosure } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaUserShield } from "react-icons/fa6";
 
 import { Avatars } from "@/lib/avatars";
@@ -10,7 +10,7 @@ import { PlayerAvatar } from "@/components/playerAvatar";
 import table from "@/public/img/table.png";
 
 export default () => {
-    const { buttonPosition, handleChangeButtonPosition, players, handleResetTable } = useTableContext();
+    const { isLoading, buttonPosition, handleChangeButtonPosition, players, handleResetTable } = useTableContext();
     const { isOpen, onOpenChange, onClose } = useDisclosure();
 
     /**
@@ -40,7 +40,24 @@ export default () => {
     }, []);
 
     return (
-        <main>
+        <main className="relative">
+            {/** Loading Wheel */}
+            <div
+                className="absolute w-screen h-screen bg-black/25 backdrop-blur-sm z-50"
+                hidden={!isLoading}
+            >
+                <Spinner
+                    color="secondary"
+                    size="lg"
+                    className="left-1/2 top-1/2 -translate-x-20 -translate-y-32"
+                    classNames={{
+                        circle1: "w-40 h-40 border-8",
+                        circle2: "w-40 h-40 border-8"
+                    }}
+                />
+            </div>
+
+            {/** Navigation */}
             <Button
                 as="a"
                 className="fixed top-2 right-2 z-10"

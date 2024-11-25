@@ -17,6 +17,8 @@ type TableValues = {
 }
 
 type TableContext = {
+    /** Whether the table is still loading values. */
+    isLoading: Readonly<boolean>;
     /** Current status of the connection to the microservice. */
     connectionStatus: Readonly<ConnectionStatus>;
     /** Set the seat number of where the button is located. */
@@ -34,6 +36,7 @@ const initialValues: TableValues = {
 
 const initialContext: TableContext = {
     ...initialValues,
+    isLoading: true,
     connectionStatus: "success",
     handleChangeButtonPosition: () => {},
     handleUpdatePlayers: () => {},
@@ -45,6 +48,7 @@ export const useTableContext = () => useContext(TableContext);
 
 export const TableContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [values, setValues] = useState<TableValues>(initialValues);
+    const [isLoading, setIsLoading] = useState(true);
     const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("success");
 
     /**
@@ -109,6 +113,9 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
             localStorage.setItem(LS_KEY_BUTTON_POSITION, String(defaultButtonPosition));
             localStorage.setItem(LS_KEY_PLAYERS, JSON.stringify(defaultPlayers));
         }
+
+        // Disable the loading state
+        setIsLoading(false);
     }, []);
 
     /** When the component mounts, open the event source for reading cards. */
@@ -127,6 +134,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         <TableContext.Provider
             value={{
                 ...values,
+                isLoading,
                 connectionStatus,
                 handleChangeButtonPosition,
                 handleUpdatePlayers,

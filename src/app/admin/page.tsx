@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { FaArrowLeft, FaBarcode } from "react-icons/fa6";
 
@@ -9,6 +9,7 @@ import { ScanAllModal } from "./components/scanAllModal";
 
 export default () => {
     const scanAllModal = useRef<ScanAllModal>(null);
+    const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
 
     return (
         <>
@@ -38,8 +39,9 @@ export default () => {
                     {CardImages.map((img, idx) => (
                         <img
                             src={img.src}
-                            className="inline-block p-2"
+                            className={`inline-block p-2 rounded-xl hover:cursor-pointer ${idx === selectedCardIndex && "bg-yellow-500"}`}
                             key={idx}
+                            onClick={() => setSelectedCardIndex(prevIdx => prevIdx === idx ? null : idx)}
                         />
                     ))}
                 </div>

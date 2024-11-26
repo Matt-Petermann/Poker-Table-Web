@@ -1,6 +1,6 @@
 import type { CustomAvatar } from "@/types/customAvatar";
 
-export const Avatars: CustomAvatar[] = [
+const avatars: CustomAvatar[] = [
     {
         seatNumber: 0,
         avatarX: 25,
@@ -72,3 +72,5 @@ export const Avatars: CustomAvatar[] = [
         buttonY: 21.25
     }
 ];
+
+export default avatars;

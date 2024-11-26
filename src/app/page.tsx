@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { Avatar, Button, ButtonGroup, Card, Modal, ModalBody, ModalContent, ModalFooter, Skeleton, Spinner, useDisclosure } from "@nextui-org/react";
 import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaUserShield } from "react-icons/fa6";
 
-import { Avatars } from "@/lib/avatars";
+import Avatars from "@/lib/avatars";
 import { useTableContext } from "@/contexts/tableContext";
 import { PlayerAvatar } from "@/components/playerAvatar";
 import table from "@/public/img/table.png";

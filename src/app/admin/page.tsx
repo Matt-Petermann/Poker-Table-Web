@@ -14,7 +14,7 @@ export default () => {
     return (
         <>
             <ScanAllModal ref={scanAllModal} />
-            <main className="pt-4 space-y-8">
+            <main className="pt-4 space-y-8" onClick={() => setSelectedCardIndex(null)}>
                 <Button
                     as="a"
                     color="success"
@@ -30,7 +30,10 @@ export default () => {
                         color="primary"
                         startContent={<FaBarcode />}
                         className="mx-auto"
-                        onClick={() => scanAllModal.current?.onOpen()}
+                        onClick={() => {
+                            setSelectedCardIndex(null);
+                            scanAllModal.current?.onOpen();
+                        }}
                     >
                         Scan All
                     </Button>
@@ -41,7 +44,10 @@ export default () => {
                             src={img.src}
                             className={`inline-block p-2 rounded-xl hover:cursor-pointer ${idx === selectedCardIndex && "bg-yellow-500"}`}
                             key={idx}
-                            onClick={() => setSelectedCardIndex(prevIdx => prevIdx === idx ? null : idx)}
+                            onClick={e => {
+                                e.stopPropagation();
+                                setSelectedCardIndex(prevIdx => prevIdx === idx ? null : idx);
+                            }}
                         />
                     ))}
                 </div>

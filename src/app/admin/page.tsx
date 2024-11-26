@@ -1,21 +1,18 @@
 "use client";
 
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { useRef } from "react";
+import { Button } from "@nextui-org/react";
 import { FaArrowLeft, FaBarcode } from "react-icons/fa6";
+
 import CardImages from "@/lib/cards";
+import { ScanAllModal } from "./components/scanAllModal";
 
 export default () => {
-    const disclosure = useDisclosure();
+    const scanAllModal = useRef<ScanAllModal>(null);
 
     return (
         <>
-            <Modal {...disclosure} hideCloseButton size="4xl" isDismissable={false}>
-                <ModalContent className="backdrop-blur-md bg-opacity-25">
-                    <ModalHeader>Scan all Cards</ModalHeader>
-                    <ModalBody>Stepper, Card Image</ModalBody>
-                    <ModalFooter>Cancel, Save</ModalFooter>
-                </ModalContent>
-            </Modal>
+            <ScanAllModal ref={scanAllModal} />
             <main className="pt-4 space-y-8">
                 <Button
                     as="a"
@@ -32,7 +29,7 @@ export default () => {
                         color="primary"
                         startContent={<FaBarcode />}
                         className="mx-auto"
-                        onClick={() => disclosure.onOpen()}
+                        onClick={() => scanAllModal.current?.onOpen()}
                     >
                         Scan All
                     </Button>

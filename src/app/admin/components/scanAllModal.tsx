@@ -2,17 +2,19 @@ import { forwardRef, memo, useImperativeHandle, useState } from "react";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Progress, useDisclosure } from "@nextui-org/react";
 import { FaFloppyDisk, FaX } from "react-icons/fa6";
 
+import Cards from "@/lib/cards";
+
 export interface ScanAllModal {
     onOpen: () => void;
 }
 
 const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
     const { isOpen, onOpenChange, onClose } = useDisclosure();
-    const [cardNumber, setCardNumber] = useState(0);
+    const [cardIndex, setCardIndex] = useState(0);
 
     useImperativeHandle(ref, () => ({
         onOpen: () => {
-            setCardNumber(0);
+            setCardIndex(0);
             onOpenChange();
         }
     }))
@@ -27,26 +29,33 @@ const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
             <ModalContent className="backdrop-blur-md bg-black/25">
                 <ModalHeader>Scan all Cards</ModalHeader>
                 <ModalBody className="w-11/12 mx-auto">
-                    <Progress
-                        value={cardNumber}
-                        maxValue={51}
-                        classNames={{
-                            indicator: "bg-gradient-to-r from-blue-500 to-green-500"
-                        }}
-                        aria-label="Card Progress"
-                    />
-                    <h2
-                        style={{
-                            marginBottom: "16px",
-                            marginLeft: `${cardNumber/51*100}%`
-                        }}
-                        className="transition-all duration-500"
-                    >
-                        <span className="absolute -translate-x-1/2">
-                            <span>{cardNumber+1}</span>
-                            <span className="text-xs">/52</span>
-                        </span>
-                    </h2>
+                    {cardIndex < 52
+                        ? <>
+                            <Progress
+                                value={cardIndex}
+                                maxValue={51}
+                                classNames={{
+                                    indicator: "bg-gradient-to-r from-blue-500 to-green-500"
+                                }}
+                                aria-label="Card Progress"
+                            />
+                            <h2
+                                style={{
+                                    marginBottom: "16px",
+                                    marginLeft: `${cardIndex/51*100}%`
+                                }}
+                                className="transition-all duration-500"
+                            >
+                                <span className="absolute -translate-x-1/2">
+                                    <span>{cardIndex + 1}</span>
+                                    <span className="text-xs">/52</span>
+                                </span>
+                            </h2>
+                            <img src={Cards[cardIndex].src} className="w-1/2 mx-auto" />
+                        </>
+                        : <h1>Everything scanned! Press save to continue...</h1>
+                    }
+                    
                 </ModalBody>
                 <ModalFooter>
                     <Button
@@ -59,7 +68,7 @@ const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
                     <Button
                         color="success"
                         startContent={<FaFloppyDisk />}
-                        onClick={() => setCardNumber(num => num+1)}
+                        onClick={() => setCardIndex(num => num+1)}
                     >
                         Save
                     </Button>

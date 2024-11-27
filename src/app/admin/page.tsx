@@ -16,7 +16,7 @@ export default () => {
     const scanAllModal = useRef<ScanAllModal>(null);
     const confirmClearAllModal = useRef<ConfirmClearAllModal>(null);
 
-    const { cardHashes, handleUpdateCardHash, newlyScannedCards } = useTableContext();
+    const { cardHashes, handleUpdateCardHash, newlyScannedCards, handlePopNewlyScannedCards } = useTableContext();
     const hasSomeHashes = useMemo(() => cardHashes.some(ch => ch.hash), [cardHashes]);
     const hashCount = useMemo(() => cardHashes.reduce((count, ch) => ch.hash ? count + 1 : count, 0), [cardHashes]);
 
@@ -39,8 +39,10 @@ export default () => {
     /** When a new card is scanned, record it. */
     useEffect(() => {
         const finalIndex = newlyScannedCards.length - 1;
-        if(selectedCardIndex !== null && finalIndex >= 0)
-            console.log("Admin:", newlyScannedCards[finalIndex]);
+        if(selectedCardIndex !== null && finalIndex >= 0) {
+            handleUpdateCardHash(selectedCardIndex, newlyScannedCards[finalIndex]);
+            handlePopNewlyScannedCards();
+        }
     }, [newlyScannedCards]);
 
     return (

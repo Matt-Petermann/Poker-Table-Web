@@ -40,6 +40,8 @@ type TableContext = {
     handleUpdateCardHashes: (cardHashes: CardHash[]) => void;
     /** Return all cards in the array to default. */
     handleDeleteCardHashes: () => void;
+    /** Remove the last element from the newly scanned cards. */
+    handlePopNewlyScannedCards: () => void;
 } & TableValues;
 
 const initialValues: TableValues = {
@@ -58,7 +60,8 @@ const initialContext: TableContext = {
     handleResetTable: () => {},
     handleUpdateCardHash: () => {},
     handleUpdateCardHashes: () => {},
-    handleDeleteCardHashes: () => {}
+    handleDeleteCardHashes: () => {},
+    handlePopNewlyScannedCards: () => {}
 };
 
 const TableContext = createContext<TableContext>(initialContext);
@@ -155,6 +158,13 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(structuredClone(defaultCardHashes)));
     }, []);
 
+    /**
+     * Remove the last element from the newly scanned cards.
+     */
+    const handlePopNewlyScannedCards = useCallback(() => {
+        setNewlyScannedCards(prev => prev.toSpliced(prev.length - 1, 1));
+    }, []);
+
     /** When the component mounts, check local storage for values. */
     useEffect(() => {
         const storedButtonPosition = localStorage.getItem(LS_KEY_BUTTON_POSITION);
@@ -182,12 +192,10 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
     /** When the component mounts, open the event source for reading cards. */
     useEffect(() => {
         const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_URL}/dealer`);
-        eventSource.onmessage = e => {
-            console.log(e.data);
-        };
+        eventSource.onmessage = e => setNewlyScannedCards(prev => [...prev, e.data]);
         eventSource.onerror = () => {
-            setConnectionStatus("error")
-            setNewlyScannedCards(prev => [...prev, "this is a test"])
+            setConnectionStatus("error");
+            setNewlyScannedCards(prev => [...prev, "this is a test"]);
         };
         eventSource.onopen = () => setConnectionStatus("success");
 
@@ -215,7 +223,8 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
                 handleResetTable,
                 handleUpdateCardHash,
                 handleUpdateCardHashes,
-                handleDeleteCardHashes
+                handleDeleteCardHashes,
+                handlePopNewlyScannedCards
             }}
         >
             {children}

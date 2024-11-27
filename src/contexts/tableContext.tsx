@@ -33,7 +33,7 @@ type TableContext = {
     /** Reset all players on the table and return the button to the starting location. */
     handleResetTable: () => void;
     /** Update a single card in the array. */
-    handleUpdateCardHash: (index: number, hash: string) => void;
+    handleUpdateCardHash: (index: number, hash: string | null) => void;
     /** Update all cards in the array. */
     handleUpdateCardHashes: (cardHashes: CardHash[]) => void;
     /** Return all cards in the array to default. */
@@ -118,7 +118,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * @param index Index of the card to update.
      * @param hash New hash to assign to the target index.
      */
-    const handleUpdateCardHash = useCallback((index: number, hash: string) => {
+    const handleUpdateCardHash = useCallback((index: number, hash: string | null) => {
         setValues(prevValues => {
             const newCardHashes = prevValues.cardHashes.map(cardHash => {
                 if(cardHash.index === index)
@@ -143,6 +143,9 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(cardHashes));
     }, []);
 
+    /**
+     * Return all card hashes to the default values.
+     */
     const handleDeleteCardHashes = useCallback(() => {
         setValues(prevValues => ({ ...prevValues, cardHashes: structuredClone(defaultCardHashes) }));
         localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(structuredClone(defaultCardHashes)));

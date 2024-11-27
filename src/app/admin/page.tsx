@@ -14,7 +14,7 @@ export default () => {
     const scanAllModal = useRef<ScanAllModal>(null);
     const confirmClearAllModal = useRef<ConfirmClearAllModal>(null);
 
-    const { cardHashes } = useTableContext();
+    const { cardHashes, handleUpdateCardHash } = useTableContext();
     const hasSomeHashes = useMemo(() => cardHashes.some(ch => ch.hash), [cardHashes]);
 
     return (
@@ -77,6 +77,7 @@ export default () => {
                                     absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2
                                     ${!(idx === selectedCardIndex && cardHashes[idx].hash) && "hidden"}
                                 `}
+                                onClick={() => handleUpdateCardHash(idx, null)}
                             />
                         </div>
                     ))}

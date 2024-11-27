@@ -2,15 +2,17 @@
 
 import { useMemo, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
-import { FaArrowLeft, FaBarcode, FaTrash } from "react-icons/fa6";
+import { FaArrowLeft, FaBarcode, FaLayerGroup, FaTrash } from "react-icons/fa6";
 
 import CardImages from "@/lib/cards";
 import { useTableContext } from "@/contexts/tableContext";
+import { TestScanModal } from "./components/testScanModal";
 import { ScanAllModal } from "./components/scanAllModal";
 import { ConfirmClearAllModal } from "./components/confirmClearAllModal";
 
 export default () => {
     const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
+    const testScanModal = useRef<TestScanModal>(null);
     const scanAllModal = useRef<ScanAllModal>(null);
     const confirmClearAllModal = useRef<ConfirmClearAllModal>(null);
 
@@ -19,6 +21,7 @@ export default () => {
 
     return (
         <>
+            <TestScanModal ref={testScanModal} />
             <ScanAllModal ref={scanAllModal} />
             <ConfirmClearAllModal ref={confirmClearAllModal} />
             <main className="pt-4 space-y-8" onClick={() => setSelectedCardIndex(null)}>
@@ -32,6 +35,14 @@ export default () => {
                     Return to Table
                 </Button>
                 <div className="flex place-content-center gap-2">
+                    <Button
+                        size="lg"
+                        color="warning"
+                        startContent={<FaLayerGroup />}
+                        onClick={() => testScanModal.current?.onOpen()}
+                    >
+                        Test
+                    </Button>
                     <Button
                         size="lg"
                         color="primary"

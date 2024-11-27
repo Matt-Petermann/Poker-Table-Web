@@ -168,7 +168,7 @@ export default () => {
                 <div>
                     <Button
                         size="lg"
-                        variant="ghost"
+                        variant="faded"
                         radius="full"
                         color="danger"
                         className="font-bold ml-6"
@@ -183,7 +183,7 @@ export default () => {
                         className="m-6"
                     >
                         <Button
-                            variant="ghost"
+                            variant="faded"
                             color="warning"
                             className="font-bold"
                             startContent={<FaArrowRotateLeft />}
@@ -191,7 +191,7 @@ export default () => {
                             Undo Last Card
                         </Button>
                         <Button
-                            variant="ghost"
+                            variant="faded"
                             color="danger"
                             className="font-bold"
                             endContent={<FaTrash />}
@@ -201,7 +201,7 @@ export default () => {
                     </ButtonGroup>
                     <Button
                         className="float-right m-6 font-bold"
-                        variant="ghost"
+                        variant="faded"
                         color="success"
                         size="lg"
                         radius="full"
@@ -222,7 +222,7 @@ export default () => {
                     </ModalBody>
                     <ModalFooter className="flex justify-center">
                         <Button
-                            variant="ghost"
+                            variant="faded"
                             color="success"
                             size="lg"
                             radius="full"
@@ -231,7 +231,7 @@ export default () => {
                             Cancel
                         </Button>
                         <Button
-                            variant="ghost"
+                            variant="faded"
                             color="danger"
                             size="lg"
                             radius="full"

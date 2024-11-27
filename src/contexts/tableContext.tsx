@@ -1,11 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Player } from "@/types/player";
+import type { CardHash } from "@/types/cardHash";
 
 const LS_KEY_PLAYERS = "players";
 const LS_KEY_BUTTON_POSITION = "button-position";
+const LS_KEY_CARD_HASHES = "card-hashes";
 
 const defaultButtonPosition = 0;
 const defaultPlayers = (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true }));
+const defaultCardHashes: CardHash[] = (Array.from(Array(52).keys())).map(index => ({ index, hash: null }));
 
 type ConnectionStatus = "loading" | "error" | "success";
 
@@ -14,6 +17,8 @@ type TableValues = {
     buttonPosition: Readonly<number>;
     /** All players at the table. */
     players: Readonly<Player[]>;
+    /** Hashes assigned to each card index. */
+    cardHashes: Readonly<CardHash[]>;
 }
 
 type TableContext = {
@@ -27,11 +32,16 @@ type TableContext = {
     handleUpdatePlayers: (id: number, newPlayer: Player) => void;
     /** Reset all players on the table and return the button to the starting location. */
     handleResetTable: () => void;
+    /** Update a single card in the array. */
+    handleUpdateCardHash: (index: number, hash: string) => void;
+    /** Update all cards in the array. */
+    handleUpdateCardHashes: (cardHashes: CardHash[]) => void;
 } & TableValues;
 
 const initialValues: TableValues = {
     buttonPosition: defaultButtonPosition,
-    players: structuredClone(defaultPlayers)
+    players: structuredClone(defaultPlayers),
+    cardHashes: structuredClone(defaultCardHashes)
 }
 
 const initialContext: TableContext = {
@@ -40,7 +50,9 @@ const initialContext: TableContext = {
     connectionStatus: "loading",
     handleChangeButtonPosition: () => {},
     handleUpdatePlayers: () => {},
-    handleResetTable: () => {}
+    handleResetTable: () => {},
+    handleUpdateCardHash: () => {},
+    handleUpdateCardHashes: () => {}
 };
 
 const TableContext = createContext<TableContext>(initialContext);
@@ -89,29 +101,57 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * Clear the player data and return the button to starting position.
      */
     const handleResetTable = useCallback(() => {
-        setValues({
+        setValues(prevValues => ({
             buttonPosition: defaultButtonPosition,
-            players: structuredClone(defaultPlayers)
-        });
+            players: structuredClone(defaultPlayers),
+            cardHashes: prevValues.cardHashes
+        }));
         localStorage.setItem(LS_KEY_BUTTON_POSITION, String(defaultButtonPosition));
         localStorage.setItem(LS_KEY_PLAYERS, JSON.stringify(defaultPlayers));
+    }, []);
+
+    /**
+     * Update a single card in the array.
+     * @param index Index of the card to update.
+     * @param hash New hash to assign to the target index.
+     */
+    const handleUpdateCardHash = useCallback((index: number, hash: string) => {
+        setValues(prevValues => ({
+            ...prevValues,
+            cardHashes: prevValues.cardHashes.map(cardHash => {
+                if(cardHash.index === index)
+                    return { index, hash };
+                return cardHash;
+            })
+        }));
+    }, []);
+
+    /**
+     * Update all card hashes in the array.
+     * @param cardHashes New array of card hashes.
+     */
+    const handleUpdateCardHashes = useCallback((cardHashes: CardHash[]) => {
+        setValues(prevValues => ({ ...prevValues, cardHashes }));
     }, []);
 
     /** When the component mounts, check local storage for values. */
     useEffect(() => {
         const storedButtonPosition = localStorage.getItem(LS_KEY_BUTTON_POSITION);
         const storedPlayers = localStorage.getItem(LS_KEY_PLAYERS);
+        const storedCardHashes = localStorage.getItem(LS_KEY_CARD_HASHES);
 
         // If there is stored user data, load it into state
-        if(storedButtonPosition && storedPlayers)
+        if(storedButtonPosition && storedPlayers && storedCardHashes)
             setValues({
                 buttonPosition: Number(storedButtonPosition),
-                players: JSON.parse(storedPlayers)
+                players: JSON.parse(storedPlayers),
+                cardHashes: JSON.parse(storedCardHashes)
             });
         // Otherwise, create defaults to local storage
         else {
             localStorage.setItem(LS_KEY_BUTTON_POSITION, String(defaultButtonPosition));
             localStorage.setItem(LS_KEY_PLAYERS, JSON.stringify(defaultPlayers));
+            localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(defaultCardHashes));
         }
 
         // Disable the loading state
@@ -147,7 +187,9 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
                 connectionStatus,
                 handleChangeButtonPosition,
                 handleUpdatePlayers,
-                handleResetTable
+                handleResetTable,
+                handleUpdateCardHash,
+                handleUpdateCardHashes
             }}
         >
             {children}

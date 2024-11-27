@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
-import { Avatar, Button, ButtonGroup, Card, Modal, ModalBody, ModalContent, ModalFooter, Skeleton, Spinner, useDisclosure } from "@nextui-org/react";
-import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaUserShield } from "react-icons/fa6";
+import { useCallback, useMemo } from "react";
+import { Avatar, Button, ButtonGroup, Card, Modal, ModalBody, ModalContent, ModalFooter, Skeleton, Snippet, Spinner, useDisclosure } from "@nextui-org/react";
+import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaTriangleExclamation, FaUserShield } from "react-icons/fa6";
 
 import Avatars from "@/lib/avatars";
 import { useTableContext } from "@/contexts/tableContext";
@@ -10,8 +10,10 @@ import { PlayerAvatar } from "@/components/playerAvatar";
 import table from "@/public/img/table.png";
 
 export default () => {
-    const { isLoading, buttonPosition, handleChangeButtonPosition, players, handleResetTable } = useTableContext();
+    const { isLoading, buttonPosition, handleChangeButtonPosition, players, handleResetTable, cardHashes } = useTableContext();
     const { isOpen, onOpenChange, onClose } = useDisclosure();
+
+    const isMissingHashes = useMemo(() => cardHashes.some(ch => !ch.hash), [cardHashes]);
 
     /**
      * Update button location to next available seat.
@@ -72,6 +74,18 @@ export default () => {
                     src={table.src}
                     className="w-[50vw] h-[25vw] ml-auto mr-auto"
                 />
+
+                {/** Missing Cards Warning */}
+                {isMissingHashes && (
+                    <Snippet
+                        hideCopyButton
+                        color="warning"
+                        symbol={<FaTriangleExclamation className="inline-block mr-2" />}
+                        className="absolute top-[15vw] left-1/2 -translate-x-1/2 border-2 border-warning-400"
+                    >
+                        Not all cards have been scanned in.
+                    </Snippet>
+                )}
 
                 {/** Player Avatars */}
                 {Avatars.map((avatar, idx) => (

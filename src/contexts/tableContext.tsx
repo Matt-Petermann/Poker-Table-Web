@@ -193,10 +193,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
     useEffect(() => {
         const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_URL}/dealer`);
         eventSource.onmessage = e => setNewlyScannedCards(prev => [...prev, e.data]);
-        eventSource.onerror = () => {
-            setConnectionStatus("error");
-            setNewlyScannedCards(prev => [...prev, "this is a test"]);
-        };
+        eventSource.onerror = () => setConnectionStatus("error");
         eventSource.onopen = () => setConnectionStatus("success");
 
         // If there is no error after 10 seconds, set the status to "success"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Snippet } from "@nextui-org/react";
 import { FaArrowLeft, FaBarcode, FaLayerGroup, FaTrash } from "react-icons/fa6";
 
@@ -16,7 +16,7 @@ export default () => {
     const scanAllModal = useRef<ScanAllModal>(null);
     const confirmClearAllModal = useRef<ConfirmClearAllModal>(null);
 
-    const { cardHashes, handleUpdateCardHash } = useTableContext();
+    const { cardHashes, handleUpdateCardHash, newlyScannedCards } = useTableContext();
     const hasSomeHashes = useMemo(() => cardHashes.some(ch => ch.hash), [cardHashes]);
     const hashCount = useMemo(() => cardHashes.reduce((count, ch) => ch.hash ? count + 1 : count, 0), [cardHashes]);
 
@@ -35,6 +35,13 @@ export default () => {
         setSelectedCardIndex(null);
         scanAllModal.current?.onOpen();
     }, []);
+
+    /** When a new card is scanned, record it. */
+    useEffect(() => {
+        const finalIndex = newlyScannedCards.length - 1;
+        if(selectedCardIndex !== null && finalIndex >= 0)
+            console.log("Admin:", newlyScannedCards[finalIndex]);
+    }, [newlyScannedCards]);
 
     return (
         <>

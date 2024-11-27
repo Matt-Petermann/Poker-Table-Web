@@ -26,6 +26,8 @@ type TableContext = {
     isLoading: Readonly<boolean>;
     /** Current status of the connection to the microservice. */
     connectionStatus: Readonly<ConnectionStatus>;
+    /** Scanned card hashes that have not yet been read. */
+    newlyScannedCards: Readonly<string[]>;
     /** Set the seat number of where the button is located. */
     handleChangeButtonPosition: (position: number) => void;
     /** Update the active players array. */
@@ -50,6 +52,7 @@ const initialContext: TableContext = {
     ...initialValues,
     isLoading: true,
     connectionStatus: "loading",
+    newlyScannedCards: [],
     handleChangeButtonPosition: () => {},
     handleUpdatePlayer: () => {},
     handleResetTable: () => {},
@@ -65,6 +68,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
     const [values, setValues] = useState<TableValues>(initialValues);
     const [isLoading, setIsLoading] = useState(true);
     const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("loading");
+    const [newlyScannedCards, setNewlyScannedCards] = useState<string[]>([]);
 
     /**
      * Update the location of the button.
@@ -179,9 +183,12 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
     useEffect(() => {
         const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_URL}/dealer`);
         eventSource.onmessage = e => {
-            console.log(e.data)
+            console.log(e.data);
         };
-        eventSource.onerror = () => setConnectionStatus("error");
+        eventSource.onerror = () => {
+            setConnectionStatus("error")
+            setNewlyScannedCards(prev => [...prev, "this is a test"])
+        };
         eventSource.onopen = () => setConnectionStatus("success");
 
         // If there is no error after 10 seconds, set the status to "success"
@@ -202,6 +209,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
                 ...values,
                 isLoading,
                 connectionStatus,
+                newlyScannedCards,
                 handleChangeButtonPosition,
                 handleUpdatePlayer,
                 handleResetTable,

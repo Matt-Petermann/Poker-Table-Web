@@ -1,8 +1,9 @@
-import { forwardRef, memo, useImperativeHandle, useState } from "react";
+import { forwardRef, memo, useEffect, useImperativeHandle, useState } from "react";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Progress, useDisclosure } from "@nextui-org/react";
 import { FaFloppyDisk, FaX } from "react-icons/fa6";
 
 import Cards from "@/lib/cards";
+import { useTableContext } from "@/contexts/tableContext";
 
 export interface ScanAllModal {
     onOpen: () => void;
@@ -11,6 +12,15 @@ export interface ScanAllModal {
 const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
     const { isOpen, onOpenChange, onClose } = useDisclosure();
     const [cardIndex, setCardIndex] = useState(0);
+
+    const { newlyScannedCards } = useTableContext();
+
+    /** When a new card is scanned, record it. */
+    useEffect(() => {
+        const finalIndex = newlyScannedCards.length - 1;
+        if(isOpen && finalIndex >= 0)
+            console.log("Scan All:", newlyScannedCards[finalIndex]);
+    }, [newlyScannedCards]);
 
     useImperativeHandle(ref, () => ({
         onOpen: () => {

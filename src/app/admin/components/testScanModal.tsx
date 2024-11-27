@@ -1,6 +1,8 @@
-import { forwardRef, memo, useImperativeHandle } from "react";
+import { forwardRef, memo, useEffect, useImperativeHandle } from "react";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import { FaX } from "react-icons/fa6";
+
+import { useTableContext } from "@/contexts/tableContext";
 
 export interface TestScanModal {
     onOpen: () => void;
@@ -8,10 +10,16 @@ export interface TestScanModal {
 
 const _Modal = forwardRef<TestScanModal>((_props, ref) => {
     const { isOpen, onOpenChange, onClose } = useDisclosure();
+    const { newlyScannedCards } = useTableContext();
 
-    useImperativeHandle(ref, () => ({
-        onOpen: onOpenChange
-    }));
+    /** When a new card is scanned, record it. */
+    useEffect(() => {
+        const finalIndex = newlyScannedCards.length - 1;
+        if(isOpen && finalIndex >= 0)
+            console.log("Test Scan:", newlyScannedCards[finalIndex]);
+    }, [newlyScannedCards]);
+
+    useImperativeHandle(ref, () => ({ onOpen: onOpenChange }));
 
     return (
         <Modal

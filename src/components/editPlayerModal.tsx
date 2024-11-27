@@ -17,7 +17,7 @@ interface EditPlayerModalProps {
 
 const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModalProps>(({ player }, ref) => {
     const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-    const { handleUpdatePlayers } = useTableContext();
+    const { handleUpdatePlayer } = useTableContext();
 
     /**
      * Update player name
@@ -26,7 +26,7 @@ const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModalProps>(({ 
         e.preventDefault();
 
         // Update the player name
-        handleUpdatePlayers(player.id, {
+        handleUpdatePlayer(player.id, {
             ...player,
             name: ((e.target as HTMLFormElement)[0] as HTMLInputElement).value
         });

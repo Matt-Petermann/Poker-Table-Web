@@ -29,13 +29,15 @@ type TableContext = {
     /** Set the seat number of where the button is located. */
     handleChangeButtonPosition: (position: number) => void;
     /** Update the active players array. */
-    handleUpdatePlayers: (id: number, newPlayer: Player) => void;
+    handleUpdatePlayer: (id: number, newPlayer: Player) => void;
     /** Reset all players on the table and return the button to the starting location. */
     handleResetTable: () => void;
     /** Update a single card in the array. */
     handleUpdateCardHash: (index: number, hash: string) => void;
     /** Update all cards in the array. */
     handleUpdateCardHashes: (cardHashes: CardHash[]) => void;
+    /** Return all cards in the array to default. */
+    handleDeleteCardHashes: () => void;
 } & TableValues;
 
 const initialValues: TableValues = {
@@ -49,10 +51,11 @@ const initialContext: TableContext = {
     isLoading: true,
     connectionStatus: "loading",
     handleChangeButtonPosition: () => {},
-    handleUpdatePlayers: () => {},
+    handleUpdatePlayer: () => {},
     handleResetTable: () => {},
     handleUpdateCardHash: () => {},
-    handleUpdateCardHashes: () => {}
+    handleUpdateCardHashes: () => {},
+    handleDeleteCardHashes: () => {}
 };
 
 const TableContext = createContext<TableContext>(initialContext);
@@ -81,7 +84,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * @param id Target ID of the player to update.
      * @param newPlayer Updated player object to replace.
      */
-    const handleUpdatePlayers = useCallback((id: number, newPlayer: Player) => {
+    const handleUpdatePlayer = useCallback((id: number, newPlayer: Player) => {
         setValues(prevValues => {
             const newPlayers = prevValues.players.map(player => {
                 if(player.id === id)
@@ -116,14 +119,19 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * @param hash New hash to assign to the target index.
      */
     const handleUpdateCardHash = useCallback((index: number, hash: string) => {
-        setValues(prevValues => ({
-            ...prevValues,
-            cardHashes: prevValues.cardHashes.map(cardHash => {
+        setValues(prevValues => {
+            const newCardHashes = prevValues.cardHashes.map(cardHash => {
                 if(cardHash.index === index)
                     return { index, hash };
                 return cardHash;
-            })
-        }));
+            });
+            localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(newCardHashes));
+
+            return {
+                ...prevValues,
+                cardHashes: newCardHashes
+            }
+        });
     }, []);
 
     /**
@@ -132,6 +140,12 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      */
     const handleUpdateCardHashes = useCallback((cardHashes: CardHash[]) => {
         setValues(prevValues => ({ ...prevValues, cardHashes }));
+        localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(cardHashes));
+    }, []);
+
+    const handleDeleteCardHashes = useCallback(() => {
+        setValues(prevValues => ({ ...prevValues, cardHashes: structuredClone(defaultCardHashes) }));
+        localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(structuredClone(defaultCardHashes)));
     }, []);
 
     /** When the component mounts, check local storage for values. */
@@ -186,10 +200,11 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
                 isLoading,
                 connectionStatus,
                 handleChangeButtonPosition,
-                handleUpdatePlayers,
+                handleUpdatePlayer,
                 handleResetTable,
                 handleUpdateCardHash,
-                handleUpdateCardHashes
+                handleUpdateCardHashes,
+                handleDeleteCardHashes
             }}
         >
             {children}

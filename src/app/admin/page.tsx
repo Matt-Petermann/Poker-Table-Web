@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
-import { FaArrowLeft, FaBarcode } from "react-icons/fa6";
+import { FaArrowLeft, FaBarcode, FaTrash } from "react-icons/fa6";
 
 import CardImages from "@/lib/cards";
 import { useTableContext } from "@/contexts/tableContext";
@@ -12,7 +12,7 @@ export default () => {
     const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
     const scanAllModal = useRef<ScanAllModal>(null);
 
-    const { cardHashes } = useTableContext();
+    const { cardHashes, handleDeleteCardHashes } = useTableContext();
 
     return (
         <>
@@ -27,18 +27,25 @@ export default () => {
                 >
                     Return to Table
                 </Button>
-                <div className="flex">
+                <div className="flex place-content-center gap-2">
                     <Button
                         size="lg"
                         color="primary"
                         startContent={<FaBarcode />}
-                        className="mx-auto"
                         onClick={() => {
                             setSelectedCardIndex(null);
                             scanAllModal.current?.onOpen();
                         }}
                     >
                         Scan All
+                    </Button>
+                    <Button
+                        size="lg"
+                        color="danger"
+                        startContent={<FaTrash />}
+                        onClick={handleDeleteCardHashes}
+                    >
+                        Clear All
                     </Button>
                 </div>
                 <div className="grid grid-cols-6 w-3/4 mx-auto">

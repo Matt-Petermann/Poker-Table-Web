@@ -42,6 +42,7 @@ export default () => {
         if(selectedCardIndex !== null && finalIndex >= 0) {
             handleUpdateCardHash(selectedCardIndex, newlyScannedCards[finalIndex]);
             handlePopNewlyScannedCards();
+            setSelectedCardIndex(null);
         }
     }, [newlyScannedCards]);
 
@@ -123,7 +124,10 @@ export default () => {
                                     absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2
                                     ${!(idx === selectedCardIndex && cardHashes[idx].hash) && "hidden"}
                                 `}
-                                onClick={() => handleUpdateCardHash(idx, null)}
+                                onClick={() => {
+                                    handleUpdateCardHash(idx, null);
+                                    setSelectedCardIndex(null);
+                                }}
                             />
                         </div>
                     ))}

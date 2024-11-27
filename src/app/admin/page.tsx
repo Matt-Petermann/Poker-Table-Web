@@ -55,19 +55,30 @@ export default () => {
                 </div>
                 <div className="grid grid-cols-6 w-3/4 mx-auto">
                     {CardImages.map((img, idx) => (
-                        <img
-                            src={img.src}
-                            className={`
-                                inline-block p-2 rounded-xl hover:cursor-pointer
-                                ${idx === selectedCardIndex && "bg-yellow-500"}
-                                ${!cardHashes[idx].hash && idx !== selectedCardIndex && "opacity-25"}
-                            `}
-                            key={idx}
-                            onClick={e => {
-                                e.stopPropagation();
-                                setSelectedCardIndex(prevIdx => prevIdx === idx ? null : idx);
-                            }}
-                        />
+                        <div className="relative" key={idx}>
+                            <img
+                                src={img.src}
+                                className={`
+                                    inline-block p-2 rounded-xl hover:cursor-pointer
+                                    ${idx === selectedCardIndex && "bg-yellow-500"}
+                                    ${!cardHashes[idx].hash && idx !== selectedCardIndex && "opacity-25"}
+                                `}
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    setSelectedCardIndex(prevIdx => prevIdx === idx ? null : idx);
+                                }}
+                            />
+                            <Button
+                                isIconOnly
+                                color="danger"
+                                size="lg"
+                                startContent={<FaTrash />}
+                                className={`
+                                    absolute top-3/4 left-1/2 -translate-x-1/2 -translate-y-1/2
+                                    ${!(idx === selectedCardIndex && cardHashes[idx].hash) && "hidden"}
+                                `}
+                            />
+                        </div>
                     ))}
                 </div>
             </main>

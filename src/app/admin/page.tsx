@@ -5,11 +5,14 @@ import { Button } from "@nextui-org/react";
 import { FaArrowLeft, FaBarcode } from "react-icons/fa6";
 
 import CardImages from "@/lib/cards";
+import { useTableContext } from "@/contexts/tableContext";
 import { ScanAllModal } from "./components/scanAllModal";
 
 export default () => {
-    const scanAllModal = useRef<ScanAllModal>(null);
     const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
+    const scanAllModal = useRef<ScanAllModal>(null);
+
+    const { cardHashes } = useTableContext();
 
     return (
         <>
@@ -42,7 +45,11 @@ export default () => {
                     {CardImages.map((img, idx) => (
                         <img
                             src={img.src}
-                            className={`inline-block p-2 rounded-xl hover:cursor-pointer ${idx === selectedCardIndex && "bg-yellow-500"}`}
+                            className={`
+                                inline-block p-2 rounded-xl hover:cursor-pointer
+                                ${idx === selectedCardIndex && "bg-yellow-500"}
+                                ${!cardHashes[idx].hash && idx !== selectedCardIndex && "opacity-25"}
+                            `}
                             key={idx}
                             onClick={e => {
                                 e.stopPropagation();

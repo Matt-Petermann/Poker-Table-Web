@@ -64,7 +64,7 @@ export default () => {
                     <Snippet
                         hideCopyButton
                         color="warning"
-                        symbol={<FaTriangleExclamation className="inline-block mr-2" />}
+                        symbol={<FaTriangleExclamation className="inline-block mr-2 -mt-0.5" />}
                         className="absolute top-[15vw] left-1/2 -translate-x-1/2 border-2 border-warning-400"
                     >
                         Not all cards have been scanned in.

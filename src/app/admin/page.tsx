@@ -1,22 +1,26 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { FaArrowLeft, FaBarcode, FaTrash } from "react-icons/fa6";
 
 import CardImages from "@/lib/cards";
 import { useTableContext } from "@/contexts/tableContext";
 import { ScanAllModal } from "./components/scanAllModal";
+import { ConfirmClearAllModal } from "./components/confirmClearAllModal";
 
 export default () => {
     const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
     const scanAllModal = useRef<ScanAllModal>(null);
+    const confirmClearAllModal = useRef<ConfirmClearAllModal>(null);
 
-    const { cardHashes, handleDeleteCardHashes } = useTableContext();
+    const { cardHashes } = useTableContext();
+    const hasSomeHashes = useMemo(() => cardHashes.some(ch => ch.hash), [cardHashes]);
 
     return (
         <>
             <ScanAllModal ref={scanAllModal} />
+            <ConfirmClearAllModal ref={confirmClearAllModal} />
             <main className="pt-4 space-y-8" onClick={() => setSelectedCardIndex(null)}>
                 <Button
                     as="a"
@@ -43,7 +47,8 @@ export default () => {
                         size="lg"
                         color="danger"
                         startContent={<FaTrash />}
-                        onClick={handleDeleteCardHashes}
+                        isDisabled={!hasSomeHashes}
+                        onClick={() => confirmClearAllModal.current?.onOpen()}
                     >
                         Clear All
                     </Button>

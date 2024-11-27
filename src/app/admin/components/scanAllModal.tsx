@@ -17,7 +17,7 @@ const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
             setCardIndex(0);
             onOpenChange();
         }
-    }))
+    }));
 
     return (
         <Modal
@@ -55,13 +55,12 @@ const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
                         </>
                         : <h1>Everything scanned! Press save to continue...</h1>
                     }
-                    
                 </ModalBody>
                 <ModalFooter>
                     <Button
                         color="danger"
                         startContent={<FaX />}
-                        onClick={() => onClose()}
+                        onClick={onClose}
                     >
                         Cancel
                     </Button>

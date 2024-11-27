@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { FaArrowLeft, FaBarcode, FaLayerGroup, FaTrash } from "react-icons/fa6";
 
@@ -18,6 +18,22 @@ export default () => {
 
     const { cardHashes, handleUpdateCardHash } = useTableContext();
     const hasSomeHashes = useMemo(() => cardHashes.some(ch => ch.hash), [cardHashes]);
+
+    /**
+     * Clear the selected card index and open the test scan modal.
+     */
+    const handleOpenTestScan = useCallback(() => {
+        setSelectedCardIndex(null);
+        testScanModal.current?.onOpen()
+    }, []);
+
+    /**
+     * Clear the selected card index and open the scan all modal.
+     */
+    const handleOpenScanAll = useCallback(() => {
+        setSelectedCardIndex(null);
+        scanAllModal.current?.onOpen();
+    }, []);
 
     return (
         <>
@@ -39,7 +55,7 @@ export default () => {
                         size="lg"
                         color="warning"
                         startContent={<FaLayerGroup />}
-                        onClick={() => testScanModal.current?.onOpen()}
+                        onClick={handleOpenTestScan}
                     >
                         Test
                     </Button>
@@ -47,10 +63,7 @@ export default () => {
                         size="lg"
                         color="primary"
                         startContent={<FaBarcode />}
-                        onClick={() => {
-                            setSelectedCardIndex(null);
-                            scanAllModal.current?.onOpen();
-                        }}
+                        onClick={handleOpenScanAll}
                     >
                         Scan All
                     </Button>

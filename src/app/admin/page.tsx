@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useRef, useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Snippet } from "@nextui-org/react";
 import { FaArrowLeft, FaBarcode, FaLayerGroup, FaTrash } from "react-icons/fa6";
 
 import CardImages from "@/lib/cards";
@@ -18,6 +18,7 @@ export default () => {
 
     const { cardHashes, handleUpdateCardHash } = useTableContext();
     const hasSomeHashes = useMemo(() => cardHashes.some(ch => ch.hash), [cardHashes]);
+    const hashCount = useMemo(() => cardHashes.reduce((count, ch) => ch.hash ? count + 1 : count, 0), [cardHashes]);
 
     /**
      * Clear the selected card index and open the test scan modal.
@@ -77,6 +78,18 @@ export default () => {
                         Clear All
                     </Button>
                 </div>
+                <Snippet
+                    hideSymbol
+                    hideCopyButton
+                    color="primary"
+                    size="lg"
+                    className="block w-fit border-2 border-primary-300 mx-auto"
+                >
+                    <p>
+                        <span className={`${hashCount < 52 && "text-red-400"}`}>{hashCount}</span>
+                        <span>/52 cards scanned.</span>
+                    </p>
+                </Snippet>
                 <div className="grid grid-cols-6 w-3/4 mx-auto">
                     {CardImages.map((img, idx) => (
                         <div className="relative" key={idx}>

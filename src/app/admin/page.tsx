@@ -102,7 +102,7 @@ export default () => {
                 </Snippet>
                 <div className="grid grid-cols-6 w-3/4 mx-auto">
                     {CardImages.map((img, idx) => (
-                        <div className="relative" key={idx}>
+                        <div className="w-fit relative" key={idx}>
                             <img
                                 src={img.src}
                                 className={`

@@ -1,10 +1,4 @@
-type CardImage = {
-    src: string;
-    width: number;
-    height: number;
-    blurWidth: number;
-    blurHeight: number;
-}
+import type { CardImage } from "@/types/cardImage";
 
 const parseFileName = (card: string) => card.match(/^([^\/]*\/[^\/]*\/[^\/]*\/[^\/]*\/)([^.]+)/)?.[2];
 

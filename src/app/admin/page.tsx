@@ -100,7 +100,7 @@ export default () => {
                         <span>/52 cards scanned.</span>
                     </p>
                 </Snippet>
-                <div className="grid grid-cols-6 w-3/4 mx-auto max-h-[75vh] overflow-y-scroll">
+                <div className="grid grid-cols-6 w-3/4 mx-auto max-h-[60vh] overflow-y-scroll">
                     {CardImages.map((img, idx) => (
                         <div className="w-fit relative" key={idx}>
                             <img

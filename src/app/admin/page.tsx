@@ -39,11 +39,14 @@ export default () => {
     /** When a new card is scanned, record it. */
     useEffect(() => {
         const finalIndex = newlyScannedCards.length - 1;
-        if(selectedCardIndex !== null && finalIndex >= 0) {
-            handleUpdateCardHash(selectedCardIndex, newlyScannedCards[finalIndex]);
-            handlePopNewlyScannedCards();
-            setSelectedCardIndex(null);
-        }
+        if(finalIndex >= 0)
+            if(selectedCardIndex === null)
+                handlePopNewlyScannedCards();
+            else {
+                handleUpdateCardHash(selectedCardIndex, newlyScannedCards[finalIndex]);
+                handlePopNewlyScannedCards();
+                setSelectedCardIndex(null);
+            }
     }, [newlyScannedCards]);
 
     return (

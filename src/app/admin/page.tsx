@@ -51,7 +51,7 @@ export default () => {
             <TestScanModal ref={testScanModal} />
             <ScanAllModal ref={scanAllModal} />
             <ConfirmClearAllModal ref={confirmClearAllModal} />
-            <main className="pt-4 space-y-8" onClick={() => setSelectedCardIndex(null)}>
+            <main className="pt-4 space-y-8 max-h-screen overflow-hidden" onClick={() => setSelectedCardIndex(null)}>
                 <Button
                     as="a"
                     color="success"
@@ -100,7 +100,7 @@ export default () => {
                         <span>/52 cards scanned.</span>
                     </p>
                 </Snippet>
-                <div className="grid grid-cols-6 w-3/4 mx-auto">
+                <div className="grid grid-cols-6 w-3/4 mx-auto max-h-[75vh] overflow-y-scroll">
                     {CardImages.map((img, idx) => (
                         <div className="w-fit relative" key={idx}>
                             <img

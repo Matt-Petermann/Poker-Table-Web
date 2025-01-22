@@ -69,7 +69,7 @@ const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
                                     <span className="text-xs">/52</span>
                                 </span>
                             </h2>
-                            <img src={Cards[cardIndex].src} className="w-1/2 mx-auto" />
+                            <img src={Cards[cardIndex]} className="w-1/2 mx-auto" />
                         </>
                         : <h1>Everything scanned! Press save to continue...</h1>
                     }

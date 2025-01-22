@@ -2,7 +2,6 @@ import { forwardRef, memo, useEffect, useImperativeHandle, useState } from "reac
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Snippet, useDisclosure } from "@nextui-org/react";
 import { FaX } from "react-icons/fa6";
 
-import type { CardImage } from "@/types/cardImage";
 import { useTableContext } from "@/contexts/tableContext";
 import Cards from "@/lib/cards";
 
@@ -12,7 +11,7 @@ export interface TestScanModal {
 
 const _Modal = forwardRef<TestScanModal>((_props, ref) => {
     const { isOpen, onOpenChange, onClose } = useDisclosure();
-    const [scannedCard, setScannedCard] = useState<CardImage | null | undefined>();
+    const [scannedCard, setScannedCard] = useState<string | null | undefined>();
 
     const { cardHashes, newlyScannedCards, handlePopNewlyScannedCards } = useTableContext();
 
@@ -22,10 +21,10 @@ const _Modal = forwardRef<TestScanModal>((_props, ref) => {
 
         if (isOpen && lastIndex >= 0) {
             // Find a saved card by hash
-            const foundCard = cardHashes.find(ch => ch.hash === newlyScannedCards[lastIndex]);
+            const foundIndex = cardHashes.findIndex(ch => ch === newlyScannedCards[lastIndex]);
 
             // Set the scanned card and pop the last entry off the stack
-            setScannedCard(foundCard ? Cards[foundCard.index] : null);
+            setScannedCard(foundIndex >= 0 ? Cards[foundIndex] : null);
             handlePopNewlyScannedCards();
         }
     }, [newlyScannedCards]);
@@ -49,7 +48,7 @@ const _Modal = forwardRef<TestScanModal>((_props, ref) => {
                     Scan a card to display the associated image.
                     {scannedCard
                         ? <img
-                            src={scannedCard.src}
+                            src={scannedCard}
                             className="w-1/4 mx-auto"
                         />
                         : scannedCard === null &&

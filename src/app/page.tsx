@@ -7,14 +7,13 @@ import { FaArrowRightLong, FaArrowRotateLeft, FaCheck, FaTrash, FaTriangleExclam
 import Avatars from "@/lib/avatars";
 import { useTableContext } from "@/contexts/tableContext";
 import { PlayerAvatar } from "@/components/playerAvatar";
-import table from "@/public/img/table.png";
 
 export default () => {
     const { buttonPosition, handleChangeButtonPosition, players, handleResetTable, cardHashes } = useTableContext();
     const { isOpen, onOpenChange, onClose } = useDisclosure();
 
     const isMissingHashes = useMemo(() => (
-        cardHashes.some(ch => !ch.hash)
+        cardHashes.some(ch => !ch)
     ), [cardHashes]);
 
     /**
@@ -63,7 +62,7 @@ export default () => {
             <div className="relative h-[100vh] pt-[10vw]">
                 {/** Table */}
                 <img
-                    src={table.src}
+                    src="/img/table.png"
                     className="w-[50vw] h-[25vw] ml-auto mr-auto"
                 />
 

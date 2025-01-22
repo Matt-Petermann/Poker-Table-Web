@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Player } from "@/types/player";
-import type { CardHash } from "@/types/cardHash";
 
 const LS_KEY_PLAYERS = "players";
 const LS_KEY_BUTTON_POSITION = "button-position";
@@ -13,11 +12,7 @@ const defaultPlayers: Player[] =
         name: null,
         isActive: true
     }));
-const defaultCardHashes: CardHash[] =
-    (Array.from(Array(52).keys())).map(index => ({
-        index,
-        hash: null
-    }));
+const defaultCardHashes: (string | null)[] = new Array(52).fill(null);
 
 enum ConnectionStatus { LOADING, ERROR, SUCCESS };
 
@@ -27,7 +22,7 @@ type TableValues = {
     /** All players at the table. */
     players: Readonly<Player[]>;
     /** Hashes assigned to each card index. */
-    cardHashes: Readonly<CardHash[]>;
+    cardHashes: Readonly<(string | null)[]>;
 }
 
 type TableContext = {
@@ -46,7 +41,7 @@ type TableContext = {
     /** Update a single card in the array. */
     handleUpdateCardHash: (index: number, hash: string | null) => void;
     /** Update all cards in the array. */
-    handleUpdateCardHashes: (cardHashes: CardHash[]) => void;
+    handleUpdateCardHashes: (cardHashes: (string | null)[]) => void;
     /** Return all cards in the array to default. */
     handleDeleteCardHashes: () => void;
     /** Remove the last element from the newly scanned cards. */
@@ -141,9 +136,9 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      */
     const handleUpdateCardHash = useCallback((index: number, hash: string | null) => {
         setValues(prevValues => {
-            const newCardHashes = prevValues.cardHashes.map(cardHash => {
-                if (cardHash.index === index) {
-                    return { index, hash };
+            const newCardHashes = prevValues.cardHashes.map((cardHash, i) => {
+                if (i === index) {
+                    return hash;
                 }
                 return cardHash;
             });
@@ -160,7 +155,7 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * Update all card hashes in the array.
      * @param cardHashes New array of card hashes.
      */
-    const handleUpdateCardHashes = useCallback((cardHashes: CardHash[]) => {
+    const handleUpdateCardHashes = useCallback((cardHashes: (string | null)[]) => {
         setValues(prevValues => ({
             ...prevValues,
             cardHashes

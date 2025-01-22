@@ -13,21 +13,29 @@ export default () => {
     const { buttonPosition, handleChangeButtonPosition, players, handleResetTable, cardHashes } = useTableContext();
     const { isOpen, onOpenChange, onClose } = useDisclosure();
 
-    const isMissingHashes = useMemo(() => cardHashes.some(ch => !ch.hash), [cardHashes]);
+    const isMissingHashes = useMemo(() => (
+        cardHashes.some(ch => !ch.hash)
+    ), [cardHashes]);
 
     /**
      * Update button location to next available seat.
      */
     const handleMoveButton = useCallback(() => {
         // Start the button one seat clockwise
-        let targetPosition = buttonPosition + 1 === 10 ? 0 : buttonPosition + 1;
+        let targetPosition =
+            buttonPosition === 9
+                ? 0
+                : buttonPosition + 1;
 
         // Rotate around the table until an active seat is found
-        while (!players.some(player => player.isActive && player.id === targetPosition))
-            if (targetPosition === 9)
+        while (!players.some(player => player.isActive && player.id === targetPosition)) {
+            if (targetPosition === 9) {
                 targetPosition = 0;
-            else
+            }
+            else {
                 targetPosition++;
+            }
+        }
             
         // Update the button position to the first active seat
         handleChangeButtonPosition(targetPosition);
@@ -73,7 +81,11 @@ export default () => {
 
                 {/** Player Avatars */}
                 {Avatars.map((avatar, idx) => (
-                    <PlayerAvatar player={players[idx]} avatar={avatar} key={idx} />
+                    <PlayerAvatar
+                        player={players[idx]}
+                        avatar={avatar}
+                        key={idx}
+                    />
                 ))}
 
                 {/** Dealer Button */}
@@ -170,7 +182,9 @@ export default () => {
                         radius="full"
                         color="danger"
                         className="font-bold ml-6"
-                        startContent={<FaTrash />}
+                        startContent={
+                            <FaTrash />
+                        }
                         onClick={onOpenChange}
                     >
                         Reset Table
@@ -184,7 +198,9 @@ export default () => {
                             variant="faded"
                             color="warning"
                             className="font-bold"
-                            startContent={<FaArrowRotateLeft />}
+                            startContent={
+                                <FaArrowRotateLeft />
+                            }
                         >
                             Undo Last Card
                         </Button>
@@ -192,7 +208,9 @@ export default () => {
                             variant="faded"
                             color="danger"
                             className="font-bold"
-                            endContent={<FaTrash />}
+                            endContent={
+                                <FaTrash />
+                            }
                         >
                             Reset Hand
                         </Button>
@@ -203,8 +221,10 @@ export default () => {
                         color="success"
                         size="lg"
                         radius="full"
-                        endContent={<FaArrowRightLong />}
-                        onClick={() => handleMoveButton()}
+                        endContent={
+                            <FaArrowRightLong />
+                        }
+                        onClick={handleMoveButton}
                     >
                         Next Hand
                     </Button>
@@ -212,7 +232,11 @@ export default () => {
             </Card>
 
             {/** Confirm Reset Modal */}
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
+            <Modal
+                hideCloseButton
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+            >
                 <ModalContent className="bg-opacity-50 backdrop-blur-md">
                     <ModalBody className="text-center">
                         <h1 className="font-semibold">Are you sure you want to reset the table?</h1>

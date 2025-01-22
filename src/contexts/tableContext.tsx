@@ -7,10 +7,19 @@ const LS_KEY_BUTTON_POSITION = "button-position";
 const LS_KEY_CARD_HASHES = "card-hashes";
 
 const defaultButtonPosition = 0;
-const defaultPlayers = (Array.from(Array(10).keys())).map(id => ({ id, name: null, isActive: true }));
-const defaultCardHashes: CardHash[] = (Array.from(Array(52).keys())).map(index => ({ index, hash: null }));
+const defaultPlayers: Player[] =
+    (Array.from(Array(10).keys())).map(id => ({
+        id,
+        name: null,
+        isActive: true
+    }));
+const defaultCardHashes: CardHash[] =
+    (Array.from(Array(52).keys())).map(index => ({
+        index,
+        hash: null
+    }));
 
-type ConnectionStatus = "loading" | "error" | "success";
+enum ConnectionStatus { LOADING, ERROR, SUCCESS };
 
 type TableValues = {
     /** Seat number where the button is located. */
@@ -31,7 +40,7 @@ type TableContext = {
     /** Set the seat number of where the button is located. */
     handleChangeButtonPosition: (position: number) => void;
     /** Update the active players array. */
-    handleUpdatePlayer: (id: number, newPlayer: Player) => void;
+    handleUpdatePlayer: (newPlayer: Player) => void;
     /** Reset all players on the table and return the button to the starting location. */
     handleResetTable: () => void;
     /** Update a single card in the array. */
@@ -53,7 +62,7 @@ const initialValues: TableValues = {
 const initialContext: TableContext = {
     ...initialValues,
     isLoading: true,
-    connectionStatus: "loading",
+    connectionStatus: ConnectionStatus.LOADING,
     newlyScannedCards: [],
     handleChangeButtonPosition: () => {},
     handleUpdatePlayer: () => {},
@@ -70,20 +79,24 @@ export const useTableContext = () => useContext(TableContext);
 export const TableContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [values, setValues] = useState<TableValues>(initialValues);
     const [isLoading, setIsLoading] = useState(true);
-    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("loading");
+    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(ConnectionStatus.LOADING);
     const [newlyScannedCards, setNewlyScannedCards] = useState<string[]>([]);
 
     /**
      * Update the location of the button.
      * @param newPosition New seat number to place the button at.
      */
-    const handleChangeButtonPosition = useCallback((newPosition: number) => {
-        if(newPosition >= 0 && newPosition < 10) {
-            setValues(prevValues => ({ ...prevValues, buttonPosition: newPosition }));
-            localStorage.setItem(LS_KEY_BUTTON_POSITION, String(newPosition));
+    const handleChangeButtonPosition = useCallback((buttonPosition: number) => {
+        if (buttonPosition >= 0 && buttonPosition < 10) {
+            setValues(prevValues => ({
+                ...prevValues,
+                buttonPosition
+            }));
+            localStorage.setItem(LS_KEY_BUTTON_POSITION, String(buttonPosition));
         }
-        else
-            throw new Error("Button must be in [0,9]");
+        else {
+            throw new Error("Button must be in [0,9].");
+        }
     }, []);
 
     /**
@@ -91,11 +104,12 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * @param id Target ID of the player to update.
      * @param newPlayer Updated player object to replace.
      */
-    const handleUpdatePlayer = useCallback((id: number, newPlayer: Player) => {
+    const handleUpdatePlayer = useCallback((newPlayer: Player) => {
         setValues(prevValues => {
             const newPlayers = prevValues.players.map(player => {
-                if(player.id === id)
+                if (player.id === newPlayer.id) {
                     return newPlayer;
+                }
                 return player;
             });
             localStorage.setItem(LS_KEY_PLAYERS, JSON.stringify(newPlayers));
@@ -128,8 +142,9 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
     const handleUpdateCardHash = useCallback((index: number, hash: string | null) => {
         setValues(prevValues => {
             const newCardHashes = prevValues.cardHashes.map(cardHash => {
-                if(cardHash.index === index)
+                if (cardHash.index === index) {
                     return { index, hash };
+                }
                 return cardHash;
             });
             localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(newCardHashes));
@@ -146,7 +161,10 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * @param cardHashes New array of card hashes.
      */
     const handleUpdateCardHashes = useCallback((cardHashes: CardHash[]) => {
-        setValues(prevValues => ({ ...prevValues, cardHashes }));
+        setValues(prevValues => ({
+            ...prevValues,
+            cardHashes
+        }));
         localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(cardHashes));
     }, []);
 
@@ -154,7 +172,10 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
      * Return all card hashes to the default values.
      */
     const handleDeleteCardHashes = useCallback(() => {
-        setValues(prevValues => ({ ...prevValues, cardHashes: structuredClone(defaultCardHashes) }));
+        setValues(prevValues => ({
+            ...prevValues,
+            cardHashes: structuredClone(defaultCardHashes)
+        }));
         localStorage.setItem(LS_KEY_CARD_HASHES, JSON.stringify(structuredClone(defaultCardHashes)));
     }, []);
 
@@ -172,12 +193,13 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
         const storedCardHashes = localStorage.getItem(LS_KEY_CARD_HASHES);
 
         // If there is stored user data, load it into state
-        if(storedButtonPosition && storedPlayers && storedCardHashes)
+        if (storedButtonPosition && storedPlayers && storedCardHashes) {
             setValues({
                 buttonPosition: Number(storedButtonPosition),
                 players: JSON.parse(storedPlayers),
                 cardHashes: JSON.parse(storedCardHashes)
             });
+        }
         // Otherwise, create defaults to local storage
         else {
             localStorage.setItem(LS_KEY_BUTTON_POSITION, String(defaultButtonPosition));
@@ -193,14 +215,15 @@ export const TableContextProvider = ({ children }: { children: React.ReactNode }
     useEffect(() => {
         const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_URL}/dealer`);
         eventSource.onmessage = e => setNewlyScannedCards(prev => [...prev, e.data]);
-        eventSource.onerror = () => setConnectionStatus("error");
-        eventSource.onopen = () => setConnectionStatus("success");
+        eventSource.onerror = () => setConnectionStatus(ConnectionStatus.ERROR);
+        eventSource.onopen = () => setConnectionStatus(ConnectionStatus.SUCCESS);
 
         // If there is no error after 10 seconds, set the status to "success"
         setTimeout(() => {
             setConnectionStatus(currentStatus => {
-                if(currentStatus === "loading")
-                    return "success";
+                if (currentStatus === ConnectionStatus.LOADING) {
+                    return ConnectionStatus.SUCCESS;
+                }
                 return currentStatus;
             });
         }, 10000);

@@ -13,14 +13,18 @@ interface DisplayIndicator {
 export const DisplayIndicator = React.memo<DisplayIndicator>(({ className }) => {
     const { connectionStatus } = useTableContext();
 
-    switch(connectionStatus) {
-        case "loading":
-            return <p className={`${styles.loading} ${className}`} />
-        case "error":
-            return <FaLinkSlash className={`${className} text-red-500 text-2xl`} />
-        case "success":
-            return <FaLink className={`${className} text-green-500 text-2xl`} />
-        default:
-            return <></>
+    switch (connectionStatus) {
+        case 0: // Loading
+            return (
+                <p className={`${styles.loading} ${className}`} />
+            );
+        case 1: // Error
+            return (
+                <FaLinkSlash className={`${className} text-red-500 text-2xl`} />
+            );
+        case 2: // Success
+            return (
+                <FaLink className={`${className} text-green-500 text-2xl`} />
+            );
     }
 });

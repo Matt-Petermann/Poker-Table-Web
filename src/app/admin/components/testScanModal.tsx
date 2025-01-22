@@ -18,10 +18,11 @@ const _Modal = forwardRef<TestScanModal>((_props, ref) => {
 
     /** When a new card is scanned, record it. */
     useEffect(() => {
-        const finalIndex = newlyScannedCards.length - 1;
-        if(isOpen && finalIndex >= 0) {
+        const lastIndex = newlyScannedCards.length - 1;
+
+        if (isOpen && lastIndex >= 0) {
             // Find a saved card by hash
-            const foundCard = cardHashes.find(ch => ch.hash === newlyScannedCards[finalIndex]);
+            const foundCard = cardHashes.find(ch => ch.hash === newlyScannedCards[lastIndex]);
 
             // Set the scanned card and pop the last entry off the stack
             setScannedCard(foundCard ? Cards[foundCard.index] : null);
@@ -51,8 +52,8 @@ const _Modal = forwardRef<TestScanModal>((_props, ref) => {
                             src={scannedCard.src}
                             className="w-1/4 mx-auto"
                         />
-                        : scannedCard === null
-                            ? <Snippet
+                        : scannedCard === null &&
+                            <Snippet
                                 hideCopyButton
                                 hideSymbol
                                 color="danger"
@@ -61,13 +62,14 @@ const _Modal = forwardRef<TestScanModal>((_props, ref) => {
                             >
                                 Card not found.
                             </Snippet>
-                            : null
                     }
                 </ModalBody>
                 <ModalFooter>
                     <Button
                         color="danger"
-                        startContent={<FaX />}
+                        startContent={
+                            <FaX />
+                        }
                         onClick={onClose}
                     >
                         Close

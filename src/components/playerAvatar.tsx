@@ -5,7 +5,7 @@ import { FaCheck, FaCircleRight, FaClock, FaPencil, FaRegClock } from "react-ico
 import type { Player } from "@/types/player";
 import type { CustomAvatar } from "@/types/customAvatar";
 import { useTableContext } from "@/contexts/tableContext";
-import EditPlayerModal, { EditPlayerModalRef } from "./editPlayerModal";
+import { EditPlayerModal } from "./editPlayerModal";
 
 interface PlayerAvatarProps {
     /** Data for the player at this seat. */
@@ -16,9 +16,9 @@ interface PlayerAvatarProps {
 
 export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) => {
     const { avatarX, avatarY, seatNumber } = avatar;
-    const { players, handleChangeButtonPosition, handleUpdatePlayers } = useTableContext();
+    const { players, handleChangeButtonPosition, handleUpdatePlayer } = useTableContext();
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const editPlayerModalRef = useRef<EditPlayerModalRef>(null);
+    const editPlayerModal = useRef<EditPlayerModal>(null);
 
     /**
      * Move button to this seat.
@@ -32,7 +32,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
      * Open the modal to edit player info.
      */
     const handleOpenEditPlayerModal = useCallback(() => {
-        editPlayerModalRef.current?.openModal();
+        editPlayerModal.current?.openModal();
         setIsPopoverOpen(false);
     }, []);
 
@@ -40,7 +40,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
      * Flag this player as sitting out.
      */
     const handleSitPlayerOut = useCallback(() => {
-        handleUpdatePlayers(seatNumber, {
+        handleUpdatePlayer({
             ...players.find(p => p.id === player.id)!,
             isActive: false
         })
@@ -51,7 +51,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
      * Set this player to active in the game.
      */
     const handleReturnPlayer = useCallback(() => {
-        handleUpdatePlayers(seatNumber, {
+        handleUpdatePlayer({
             ...players.find(p => p.id === player.id)!,
             isActive: true
         })
@@ -61,7 +61,7 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
     return (
         <>
             <EditPlayerModal
-                ref={editPlayerModalRef}
+                ref={editPlayerModal}
                 player={player}
             />
             <Popover
@@ -88,7 +88,9 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                     <Listbox aria-label="List">
                         <ListboxItem
                             key="edit"
-                            startContent={<FaPencil />}
+                            startContent={
+                                <FaPencil />
+                            }
                             className="text-xl"
                             onClick={handleOpenEditPlayerModal}
                             aria-label="Edit"
@@ -97,7 +99,9 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                         </ListboxItem>
                         <ListboxItem
                             key="move"
-                            startContent={<FaCircleRight />}
+                            startContent={
+                                <FaCircleRight />
+                            }
                             className="text-xl"
                             onClick={handleMoveButton}
                             aria-label="Move"
@@ -106,7 +110,9 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                         </ListboxItem>
                         <ListboxItem
                             key="dropout"
-                            startContent={<FaRegClock />}
+                            startContent={
+                                <FaRegClock />
+                            }
                             className={`text-xl ${
                                 player.isActive
                                     ? ""
@@ -119,7 +125,9 @@ export const PlayerAvatar = React.memo<PlayerAvatarProps>(({ player, avatar }) =
                         </ListboxItem>
                         <ListboxItem
                             key="return"
-                            startContent={<FaClock />}
+                            startContent={
+                                <FaClock />
+                            }
                             className={`text-xl ${
                                 player.isActive
                                     ? "hidden"

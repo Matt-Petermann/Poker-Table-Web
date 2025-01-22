@@ -1,8 +1,8 @@
-import { memo } from "react";
+import React from "react";
 import { Spinner } from "@nextui-org/react";
 import { useTableContext } from "@/contexts/tableContext";
 
-export const LoadingOverlay = memo(() => {
+export const LoadingOverlay = React.memo(() => {
     const { isLoading } = useTableContext();
 
     return (

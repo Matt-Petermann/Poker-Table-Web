@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Progress, useDisclosure } from "@nextui-org/react";
 import { FaFloppyDisk, FaX } from "react-icons/fa6";
 
@@ -15,11 +15,19 @@ const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
 
     const { newlyScannedCards } = useTableContext();
 
+    /**
+     * Increment the index of the card to scan.
+     */
+    const handleIncrementCardIndex = useCallback(() => {
+        setCardIndex(num => num + 1);
+    }, []);
+
     /** When a new card is scanned, record it. */
     useEffect(() => {
-        const finalIndex = newlyScannedCards.length - 1;
-        if(isOpen && finalIndex >= 0)
-            console.log("Scan All:", newlyScannedCards[finalIndex]);
+        const lastIndex = newlyScannedCards.length - 1;
+        if (isOpen && lastIndex >= 0) {
+            console.log("Scan All:", newlyScannedCards[lastIndex]);
+        }
     }, [newlyScannedCards]);
 
     useImperativeHandle(ref, () => ({
@@ -76,8 +84,10 @@ const _Modal = forwardRef<ScanAllModal>((_props, ref) => {
                     </Button>
                     <Button
                         color="success"
-                        startContent={<FaFloppyDisk />}
-                        onClick={() => setCardIndex(num => num+1)}
+                        startContent={
+                            <FaFloppyDisk />
+                        }
+                        onClick={handleIncrementCardIndex}
                     >
                         Save
                     </Button>

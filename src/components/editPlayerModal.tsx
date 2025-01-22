@@ -5,7 +5,7 @@ import { FaFloppyDisk, FaX } from "react-icons/fa6";
 import type { Player } from "@/types/player";
 import { useTableContext } from "@/contexts/tableContext";
 
-export interface EditPlayerModalRef {
+export interface EditPlayerModal {
     /** Open the edit player modal. */
     openModal: () => void;
 }
@@ -15,7 +15,7 @@ interface EditPlayerModalProps {
     player: Player;
 }
 
-const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModalProps>(({ player }, ref) => {
+const _Modal = forwardRef<EditPlayerModal, EditPlayerModalProps>(({ player }, ref) => {
     const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
     const { handleUpdatePlayer } = useTableContext();
 
@@ -26,7 +26,7 @@ const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModalProps>(({ 
         e.preventDefault();
 
         // Update the player name
-        handleUpdatePlayer(player.id, {
+        handleUpdatePlayer({
             ...player,
             name: ((e.target as HTMLFormElement)[0] as HTMLInputElement).value
         });
@@ -86,4 +86,4 @@ const EditPlayerModal = forwardRef<EditPlayerModalRef, EditPlayerModalProps>(({ 
     );
 });
 
-export default React.memo(EditPlayerModal);
+export const EditPlayerModal = React.memo(_Modal);
